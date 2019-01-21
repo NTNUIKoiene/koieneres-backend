@@ -19,8 +19,12 @@ from reservations import views
 from rest_framework import routers
 
 router = routers.DefaultRouter()
-router.register(r'reservations', views.ReservationViewSet)
-router.register(r'reservationdata', views.ReservationDataViewSet)
+router.register(
+    r'publicreservationdata',
+    views.PublicReservationDataViewSet,
+    base_name='public')
+router.register(
+    r'reservationdata', views.ReservationDataViewSet, base_name='resdata')
 
 urlpatterns = [
     url('^', include(router.urls)),
