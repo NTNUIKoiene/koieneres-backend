@@ -113,3 +113,8 @@ ovase/settings/local.py
 
 # VScode
 .vscode/
+
+# Elastic Beanstalk Files
+.elasticbeanstalk/*
+!.elasticbeanstalk/*.cfg.yml
+!.elasticbeanstalk/*.global.yml

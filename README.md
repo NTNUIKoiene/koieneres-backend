@@ -5,5 +5,9 @@
 ```
 virtualenv -p python3 env
 source env/bin/activate
-pip install django djangorestframework
+pip install -r requirements.txt
 ```
+
+### Deploy API
+
+https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/create-deploy-python-django.html
