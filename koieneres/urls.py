@@ -20,6 +20,7 @@ from rest_framework import routers
 
 router = routers.DefaultRouter()
 router.register(r'reservations', views.ReservationViewSet)
+router.register(r'reservationdata', views.ReservationDataViewSet)
 
 urlpatterns = [
     url('^', include(router.urls)),
