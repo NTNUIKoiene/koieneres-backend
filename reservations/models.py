@@ -7,14 +7,15 @@ from django.db import models
 
 
 class Reservation(models.Model):
-    from_date = models.DateField()
-    to_date = models.DateField()
+    membership_number = models.TextField()
     name = models.TextField()
+    phone = models.TextField()
+    email = models.EmailField()
+    should_pay = models.BooleanField()
+    is_payed = models.BooleanField(default=False)
+
     created_by = models.ForeignKey(
         'auth.User',
         related_name='reservations',
         on_delete=models.SET_NULL,
         null=True)
-
-    class Meta:
-        ordering = ('from_date', 'to_date')
