@@ -17,6 +17,18 @@ from django.conf.urls import url, include
 from django.contrib import admin
 from reservations import views
 from rest_framework import routers
+from rest_framework_jwt.views import obtain_jwt_token, refresh_jwt_token, verify_jwt_token
+from rest_framework_swagger.views import get_swagger_view
+
+jwt_urlpatterns = [
+    url(r'^token-auth/$', obtain_jwt_token, name='obtain_jwt_token'),
+    url(r'^token-auth/refresh/$', refresh_jwt_token, name='refresh_jwt_token'),
+    url(r'^token-auth/verify/$', verify_jwt_token, name='verify_jwt_token'),
+]
+
+authorization_urlpatterns = [
+    url(r'', include((jwt_urlpatterns, 'jwt'), namespace='jwt')),
+]
 
 router = routers.DefaultRouter()
 router.register(
@@ -29,6 +41,8 @@ router.register(
     r'cabinstatus', views.CabinStatusViewSet, base_name='cabinstatus')
 
 urlpatterns = [
-    url('^', include(router.urls)),
+    url('^api/', include(router.urls)),
     url(r'^admin/', admin.site.urls),
+    url(r'^authorization/', include(authorization_urlpatterns)),
+    url(r'^swagger/', get_swagger_view(title='Koieneres API'))
 ]

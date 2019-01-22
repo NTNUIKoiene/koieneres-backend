@@ -23,6 +23,10 @@ class CabinStatusViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Cabin.objects.all()
     serializer_class = CabinStatusSerializer
 
+    def get_serializer_class(self):
+        # TODO: Custom for details?
+        return self.serializer_class
+
     def get_serializer_context(self):
         from_date = self.request.GET.get('from', datetime.date.today())
         to_date = self.request.GET.get(

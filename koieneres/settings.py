@@ -32,7 +32,8 @@ INSTALLED_APPS = [
     'django.contrib.admin', 'django.contrib.auth',
     'django.contrib.contenttypes', 'django.contrib.sessions',
     'django.contrib.messages', 'django.contrib.staticfiles', 'rest_framework',
-    'reservations.apps.ReservationsConfig', 'django_extensions'
+    'reservations.apps.ReservationsConfig', 'django_extensions',
+    'rest_framework_swagger'
 ]
 
 MIDDLEWARE = [
