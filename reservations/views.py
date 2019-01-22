@@ -20,6 +20,11 @@ class PublicReservationDataViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 class CabinStatusViewSet(viewsets.ReadOnlyModelViewSet):
+    """
+    Return a list of the status for cabins for each date. The status includes 
+    how many of the places that are booked and if the cabin is closed. Also
+    returns the name, size and price of the cabin.
+    """
     queryset = Cabin.objects.all()
     serializer_class = CabinStatusSerializer
 
