@@ -25,6 +25,8 @@ router.register(
     base_name='public')
 router.register(
     r'reservationdata', views.ReservationDataViewSet, base_name='resdata')
+router.register(
+    r'cabinstatus', views.CabinStatusViewSet, base_name='cabinstatus')
 
 urlpatterns = [
     url('^', include(router.urls)),
