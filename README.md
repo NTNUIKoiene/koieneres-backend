@@ -8,6 +8,12 @@ source env/bin/activate
 pip install -r requirements.txt
 ```
 
-### Deploy API
+### Run the application
 
-https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/create-deploy-python-django.html
+#### Start SQL Proxy
+
+```
+./cloud_sql_proxy -instances="koieneres-api-dev:europe-north1:koieneres-api-dev"=tcp:3306
+```
+
+### Deploy API
