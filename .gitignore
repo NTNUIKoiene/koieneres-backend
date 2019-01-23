@@ -96,7 +96,7 @@ venv.bak/
 
 # Rope project settings
 .ropeproject
-
+env.yaml
 # mkdocs documentation
 /site
 
@@ -118,3 +118,4 @@ ovase/settings/local.py
 .elasticbeanstalk/*
 !.elasticbeanstalk/*.cfg.yml
 !.elasticbeanstalk/*.global.yml
+static/

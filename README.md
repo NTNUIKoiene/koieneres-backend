@@ -8,7 +8,7 @@ source env/bin/activate
 pip install -r requirements.txt
 ```
 
-### Runing the application
+### Running the application locally
 
 #### Create dotenv file
 
@@ -31,3 +31,28 @@ SECRET=[DJANGO SECRET KEY]
 This proxy enables the Django application running locally to communicate with the SQL database in Google Cloud.
 
 ### Deploy API
+
+#### Create secret config file
+
+Create a file called `env.yaml` and add the required secrets:
+
+```
+env_variables:
+  DB_HOST: "/cloudsql/[CONNECTION NAME]"
+  DB_NAME: [DB NAME]
+  DB_USER: [DB USERNAME]
+  DB_PASSWORD: [DB PASSWORD]
+  SECRET: [DJANGO SECRET KEY]
+```
+
+#### Collect static files
+
+```
+python manage.py collectstatic
+```
+
+#### Deploy
+
+```
+gcloud app deploy
+```
