@@ -8,12 +8,26 @@ source env/bin/activate
 pip install -r requirements.txt
 ```
 
-### Run the application
+### Runing the application
+
+#### Create dotenv file
+
+Create a file called `.env` and add the required secrets:
+
+```
+DB_HOST=/cloudsql/[CONNECTION NAME]
+DB_NAME=[DB NAME]
+DB_USER=[DB USERNAME]
+DB_PASSWORD=[DB PASSWORD]
+SECRET=[DJANGO SECRET KEY]
+```
 
 #### Start SQL Proxy
 
 ```
-./cloud_sql_proxy -instances="koieneres-api-dev:europe-north1:koieneres-api-dev"=tcp:3306
+./cloud_sql_proxy -instances="koieneres-api-dev:europe-north1:koieneres-api-dev-db"=tcp:3306
 ```
+
+This proxy enables the Django application running locally to communicate with the SQL database in Google Cloud.
 
 ### Deploy API
