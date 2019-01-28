@@ -7,6 +7,7 @@ from django.db import models
 
 
 class Cabin(models.Model):
+    article_number = models.IntegerField()
     name = models.TextField()
     size = models.IntegerField()
     member_price = models.FloatField()
