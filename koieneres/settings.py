@@ -101,7 +101,7 @@ DATABASES = {
 }
 
 # [START db_setup]
-if os.getenv('GAE_APPLICATION', None):
+if os.getenv('GAE_APPLICATION', None) or os.getenv('CI', None):
     # Running on production App Engine, so connect to Google Cloud SQL using
     # the unix socket at /cloudsql/<your-cloudsql-connection string>
     DATABASES = {
@@ -113,7 +113,6 @@ if os.getenv('GAE_APPLICATION', None):
             'PASSWORD': os.getenv('DB_PASSWORD'),
         }
     }
-
 else:
     # Running locally so connect to either a local MySQL instance or connect
     # to Cloud SQL via the proxy.  To start the proxy via command line:
