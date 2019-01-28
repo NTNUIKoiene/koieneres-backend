@@ -43,6 +43,7 @@ jobs:
       - save_cache:
           paths:
             - ./venv
+            - ~/gcloud
           key: v1-dependencies-{{ checksum "requirements.txt" }}
         
       # run tests!
@@ -59,4 +60,7 @@ jobs:
       - run:
           name: deploy
           command: |
+            echo $GCLOUD_SECRET | base64 --decode > client-secret.json
+            ~/gcloud/google-cloud-sdk/bin/gcloud auth activate-service-account --key-file client-secret.json
+            ~/gcloud/google-cloud-sdk/bin/gcloud config set koieneres-api-dev
             ~/gcloud/google-cloud-sdk/bin/gcloud app deploy
