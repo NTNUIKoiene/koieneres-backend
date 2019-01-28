@@ -55,8 +55,8 @@ jobs:
           command: |
             . venv/bin/activate
             python manage.py collectstatic
-        
+      
       - run:
           name: deploy
           command: |
-            ./gcloud/google-cloud-sdk/bin/gcloud app deploy
+            ~/gcloud/google-cloud-sdk/bin/gcloud app deploy
