@@ -61,7 +61,7 @@ jobs:
           name: deploy
           command: |
             echo $GCLOUD > /tmp/client-secret.json
-            echo "env_variables:\n  DB_HOST: "${DB_HOST}"\n  DB_NAME: ${DB_NAME}\n  DB_USER: ${DB_USER}\n  DB_PASSWORD: ${DB_PASSWORD}\n  SECRET: ${SECRET}" > env.yaml
+            sed -e 's/ HOST/$DB_HOST/' -e 's/ NAME/$DB_NAME/' -e 's/ USER/$DB_USER/' -e 's/ PASSWORD/$DB_PASSWORD/' -e 's/ DJANGO_SECRET/$DJANGO_SECRET/' > env.yaml
             ~/gcloud/google-cloud-sdk/bin/gcloud auth activate-service-account --key-file /tmp/client-secret.json
             ~/gcloud/google-cloud-sdk/bin/gcloud config set project koieneres-api-dev
             ~/gcloud/google-cloud-sdk/bin/gcloud app deploy
