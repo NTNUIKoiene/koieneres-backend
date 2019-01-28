@@ -60,7 +60,7 @@ jobs:
       - run:
           name: deploy
           command: |
-            echo $GCLOUD_SECRET | base64 --decode > /tmp/client-secret.json
+            echo $GCLOUD > /tmp/client-secret.json
             ~/gcloud/google-cloud-sdk/bin/gcloud auth activate-service-account --key-file /tmp/client-secret.json
             ~/gcloud/google-cloud-sdk/bin/gcloud config set koieneres-api-dev
             ~/gcloud/google-cloud-sdk/bin/gcloud app deploy
