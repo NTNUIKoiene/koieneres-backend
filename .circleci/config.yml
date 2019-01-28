@@ -37,7 +37,7 @@ jobs:
       - run:
           name: install gcloud
           command: |
-            curl -sSL https://sdk.cloud.google.com | bash
+            curl -sSL https://sdk.cloud.google.com > /tmp/gcl && bash /tmp/gcl --install-dir=~/gcloud --disable-prompts
 
 
       - save_cache:
