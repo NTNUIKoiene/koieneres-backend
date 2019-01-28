@@ -101,7 +101,7 @@ DATABASES = {
 }
 
 # [START db_setup]
-if os.getenv('GAE_APPLICATION', None) or os.getenv('CI', None):
+if os.getenv('GAE_APPLICATION', None):
     # Running on production App Engine, so connect to Google Cloud SQL using
     # the unix socket at /cloudsql/<your-cloudsql-connection string>
     DATABASES = {
