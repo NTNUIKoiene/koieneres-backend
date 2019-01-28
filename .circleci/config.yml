@@ -44,12 +44,13 @@ jobs:
       # other common Python testing frameworks include pytest and nose
       # https://pytest.org
       # https://nose.readthedocs.io
-      - run:
-          name: run tests
+      - run: 
+          name: collect static files
           command: |
             . venv/bin/activate
-            python manage.py test
-
-      - store_artifacts:
-          path: test-reports
-          destination: test-reports
+            python manage.py collectstatic
+        
+      - run:
+          name: deploy
+          command: |
+            gcloud app deploy
