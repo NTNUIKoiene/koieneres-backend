@@ -61,7 +61,7 @@ jobs:
           name: deploy
           command: |
             echo $GCLOUD > /tmp/client-secret.json
-            sed -e 's/ HOST/$DB_HOST/' -e 's/ NAME/$DB_NAME/' -e 's/ USER/$DB_USER/' -e 's/ PASSWORD/$DB_PASSWORD/' -e 's/ DJANGO_SECRET/$SECRET/' > /home/circleci/repo/env.yaml
+            sed -e 's/ HOST/$DB_HOST/' -e 's/ NAME/$DB_NAME/' -e 's/ USER/$DB_USER/' -e 's/ PASSWORD/$DB_PASSWORD/' -e 's/ DJANGO_SECRET/$SECRET/' env.yaml.sample > env.yaml
             ~/gcloud/google-cloud-sdk/bin/gcloud auth activate-service-account --key-file /tmp/client-secret.json
             ~/gcloud/google-cloud-sdk/bin/gcloud config set project koieneres-api-dev
             ~/gcloud/google-cloud-sdk/bin/gcloud app deploy
