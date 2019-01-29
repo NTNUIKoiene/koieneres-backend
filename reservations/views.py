@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 
 from django.shortcuts import render
 from .models import Reservation, ReservationMetaData, Cabin
-from .serializers import ReservationMetaDataSerializer, PublicReservationMetaDataSerializer, CabinStatusSerializer
+from .serializers import ReservationMetaDataSerializer, PublicReservationMetaDataSerializer, StatusSerializer
 from rest_framework import viewsets, permissions, mixins
 from rest_framework.response import Response
 from utils.dateutils import compute_reservation_period, string_to_date
@@ -21,7 +21,7 @@ class PublicReservationDataViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = PublicReservationMetaDataSerializer
 
 
-class CabinStatusViewSet(viewsets.ReadOnlyModelViewSet):
+class StatusViewSet(viewsets.ReadOnlyModelViewSet):
     '''
     list:
     Get the status for each cabin. Includes how many places are occupied 
@@ -39,7 +39,7 @@ class CabinStatusViewSet(viewsets.ReadOnlyModelViewSet):
         to: date (default end of current reservation period)
     '''
     queryset = Cabin.objects.all()
-    serializer_class = CabinStatusSerializer
+    serializer_class = StatusSerializer
 
     def get_serializer_class(self):
         # TODO: Custom for details?

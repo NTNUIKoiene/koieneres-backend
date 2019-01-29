@@ -10,8 +10,8 @@ class Cabin(models.Model):
     article_number = models.IntegerField()
     name = models.TextField()
     size = models.IntegerField()
-    member_price = models.FloatField()
-    non_member_price = models.FloatField()
+    member_price = models.FloatField(default=40)
+    non_member_price = models.FloatField(default=80)
 
     def __str__(self):
         return self.name
@@ -42,11 +42,15 @@ class ReservationMetaData(models.Model):
 
 class Reservation(models.Model):
     cabin = models.ForeignKey(
-        Cabin, on_delete=models.CASCADE, related_name='reservation_items')
-    date = models.DateField()
+        Cabin,
+        on_delete=models.CASCADE,
+        related_name='reservation_items',
+        db_index=True)
+    date = models.DateField(db_index=True)
     members = models.IntegerField()
     non_members = models.IntegerField()
     meta_data = models.ForeignKey(
         ReservationMetaData,
         on_delete=models.CASCADE,
-        related_name='reservation_items')
+        related_name='reservation_items',
+        db_index=True)

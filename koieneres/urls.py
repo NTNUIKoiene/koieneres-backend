@@ -37,11 +37,11 @@ router.register(
     base_name='publicresdata')
 router.register(
     r'reservationdata', views.ReservationDataViewSet, base_name='resdata')
+router.register(r'status', views.StatusViewSet, base_name='status')
 router.register(
-    r'cabinstatus', views.CabinStatusViewSet, base_name='cabinstatus')
-router.register(
-    r'reservation-period', views.ReservationPeriodViewSet, base_name='res-period'
-)
+    r'reservation-period',
+    views.ReservationPeriodViewSet,
+    base_name='res-period')
 
 urlpatterns = [
     url('^api/', include(router.urls)),

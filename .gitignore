@@ -119,3 +119,4 @@ ovase/settings/local.py
 !.elasticbeanstalk/*.cfg.yml
 !.elasticbeanstalk/*.global.yml
 static/
+dump.json

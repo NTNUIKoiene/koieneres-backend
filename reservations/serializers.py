@@ -11,7 +11,7 @@ class CabinSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class CabinStatusSerializer(serializers.ModelSerializer):
+class StatusSerializer(serializers.ModelSerializer):
 
     data = serializers.SerializerMethodField()
 
@@ -22,17 +22,16 @@ class CabinStatusSerializer(serializers.ModelSerializer):
         """
         from_date = self.context['from']
         to_date = self.context['to']
-        reservations = Reservation.objects.select_related('cabin').filter(
-            date__gte=from_date, date__lte=to_date)
-        print(from_date, to_date)
         data = {}
         for date in daterange(from_date, to_date):
-            result = reservations.filter(date=date).aggregate(
-                booked=Coalesce(Sum(F('members') + F('non_members')), 0))
-            # TODO: Check if cabin is closed
-            is_closed = False
-            result['isClosed'] = is_closed
-            data[str(date)] = result
+            data[str(date)] = {'is_closed': False, 'booked': 0}
+        reservations = Reservation.objects.filter(
+            date__gte=from_date, date__lte=to_date, cabin=instance).values(
+                'members', 'non_members', 'date')
+        for reservation in reservations:
+            data[str(reservation['date']
+                     )] = reservation['members'] + reservation['non_members']
+
         return data
 
     class Meta:
