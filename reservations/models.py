@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
+from django.conf import settings
 
 from django.db import models
 
@@ -28,7 +28,7 @@ class ReservationMetaData(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     created_by = models.ForeignKey(
-        'auth.User',
+        settings.AUTH_USER_MODEL,
         related_name='reservations',
         on_delete=models.SET_NULL,
         null=True)

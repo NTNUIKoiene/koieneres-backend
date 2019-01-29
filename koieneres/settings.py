@@ -31,6 +31,8 @@ if os.getenv('GAE_APPLICATION', None):
 else:
     DEBUG = True
 
+AUTH_USER_MODEL = 'users.User'
+
 ALLOWED_HOSTS = ['*']
 
 # Application definition
@@ -44,6 +46,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'reservations.apps.ReservationsConfig',
+    'users.apps.UsersConfig',
     'django_extensions',
     'rest_framework_swagger',
     'corsheaders',
