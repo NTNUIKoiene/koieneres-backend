@@ -6,7 +6,7 @@ from .models import Reservation, ReservationMetaData, Cabin
 from .serializers import ReservationMetaDataSerializer, PublicReservationMetaDataSerializer, CabinStatusSerializer
 from rest_framework import viewsets, permissions, mixins
 from rest_framework.response import Response
-from utils.dateutils import compute_reservation_period
+from utils.dateutils import compute_reservation_period, string_to_date
 import datetime
 
 
@@ -23,9 +23,20 @@ class PublicReservationDataViewSet(viewsets.ReadOnlyModelViewSet):
 
 class CabinStatusViewSet(viewsets.ReadOnlyModelViewSet):
     '''
-    Return a list of the status for cabins for each date. The status includes 
-    how many of the places that are booked and if the cabin is closed. Also
-    returns the name, size and price of the cabin.
+    list:
+    Get the status for each cabin. Includes how many places are occupied 
+    and if the cabin is closed.
+    query parameters:
+        from: date (default today)
+        to: date (default end of current reservation period)
+
+
+    retrieve:
+    Get the status for a single cabin. Includes how many places are occupied 
+    and if the cabin is closed.
+    query parameters:
+        from: date (default today)
+        to: date (default end of current reservation period)
     '''
     queryset = Cabin.objects.all()
     serializer_class = CabinStatusSerializer
@@ -35,11 +46,13 @@ class CabinStatusViewSet(viewsets.ReadOnlyModelViewSet):
         return self.serializer_class
 
     def get_serializer_context(self):
-        from_date = self.request.GET.get('from', datetime.date.today())
-        to_date = self.request.GET.get(
-            'to',
-            datetime.date.today() + datetime.timedelta(days=14))
-        return {'from': from_date, 'to': to_date}
+        from_date = self.request.GET.get('from', str(datetime.date.today()))
+        to_date = self.request.GET.get('to',
+                                       str(compute_reservation_period()['to']))
+        return {
+            'from': string_to_date(from_date),
+            'to': string_to_date(to_date)
+        }
 
 
 class ReservationPeriodViewSet(viewsets.ReadOnlyModelViewSet):
@@ -48,13 +61,12 @@ class ReservationPeriodViewSet(viewsets.ReadOnlyModelViewSet):
     Get the current reservation period
     
     retrieve:
-    Get the reservation period of a specified date
+    Get the reservation period of a specified date.
+    Date format example: 2019-01-20
     '''
 
     def list(self, request, format=None):
         return Response(compute_reservation_period())
 
     def retrieve(self, request, pk=None):
-        return Response(
-            compute_reservation_period(
-                datetime.datetime.strptime(pk, "%Y-%m-%d").date()))
+        return Response(compute_reservation_period(string_to_date(pk)))
