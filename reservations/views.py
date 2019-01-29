@@ -10,7 +10,7 @@ from utils.dateutils import compute_reservation_period, string_to_date
 import datetime
 
 
-class ReservationDataViewSet(viewsets.ModelViewSet):
+class ReservationDataViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = ReservationMetaData.objects.all()
     serializer_class = ReservationMetaDataSerializer
     permission_classes = (permissions.IsAuthenticated, )
@@ -19,6 +19,7 @@ class ReservationDataViewSet(viewsets.ModelViewSet):
 class PublicReservationDataViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = ReservationMetaData.objects.all()
     serializer_class = PublicReservationMetaDataSerializer
+    permission_classes = (permissions.AllowAny, )
 
 
 class StatusViewSet(viewsets.ReadOnlyModelViewSet):
@@ -39,6 +40,7 @@ class StatusViewSet(viewsets.ReadOnlyModelViewSet):
         to: date (default end of current reservation period)
     '''
     queryset = Cabin.objects.all()
+    permission_classes = (permissions.AllowAny, )
     serializer_class = StatusSerializer
 
     def get_serializer_class(self):
@@ -55,6 +57,12 @@ class StatusViewSet(viewsets.ReadOnlyModelViewSet):
         }
 
 
+class CreateReservationViewSet(mixins.CreateModelMixin,
+                               viewsets.GenericViewSet):
+    serializer_class = ReservationMetaDataSerializer
+    permission_classes = (permissions.IsAuthenticated, )
+
+
 class ReservationPeriodViewSet(viewsets.ReadOnlyModelViewSet):
     '''
     list:
@@ -64,6 +72,7 @@ class ReservationPeriodViewSet(viewsets.ReadOnlyModelViewSet):
     Get the reservation period of a specified date.
     Date format example: 2019-01-20
     '''
+    permission_classes = (permissions.AllowAny, )
 
     def list(self, request, format=None):
         return Response(compute_reservation_period())

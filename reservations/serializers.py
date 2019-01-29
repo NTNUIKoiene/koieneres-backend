@@ -3,6 +3,7 @@ from .models import Reservation, ReservationMetaData, Cabin
 from utils.dateutils import daterange
 from django.db.models import Sum, F
 from django.db.models.functions import Coalesce
+from django.db import transaction
 
 
 class CabinSerializer(serializers.ModelSerializer):
@@ -48,11 +49,20 @@ class ReservationItemSerializer(serializers.ModelSerializer):
 
 
 class ReservationMetaDataSerializer(serializers.ModelSerializer):
-    reservation_items = ReservationItemSerializer(many=True, read_only=True)
+    reservation_items = serializers.PrimaryKeyRelatedField(
+        queryset=Reservation.objects.all(), many=True)
 
     class Meta:
         model = ReservationMetaData
         fields = '__all__'
+
+    def create(self, validated_data):
+        with transaction.atomic():
+            metadata = super().create(validated_data)
+            metadata.created_by = self.context['request'].user
+            metadata.save()
+            assert False
+            return metadata
 
 
 class PublicReservationMetaDataSerializer(serializers.ModelSerializer):

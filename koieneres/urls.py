@@ -32,6 +32,10 @@ authorization_urlpatterns = [
 
 router = routers.DefaultRouter()
 router.register(
+    r'create-reservation',
+    views.CreateReservationViewSet,
+    base_name='create-reservation')
+router.register(
     r'publicreservationdata',
     views.PublicReservationDataViewSet,
     base_name='publicresdata')
