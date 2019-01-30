@@ -5,6 +5,7 @@ from django.db.models import Sum, F
 from django.db.models.functions import Coalesce
 from django.db import transaction
 from utils.validators import validate_selected_dates
+from utils.dateutils import string_to_date
 
 
 class CabinSerializer(serializers.ModelSerializer):
@@ -67,7 +68,19 @@ class ReservationMetaDataSerializer(serializers.ModelSerializer):
                 assert validate_selected_dates(
                     selected_dates,
                     user.is_cabin_board), 'Selected dates are invalid'
-                assert False, 'Fallback error'
+                # TODO: Validate reservation period
+                # TODO: Validate is closed
+                # Create reservations
+                for selected_date in selected_dates:
+                    cabin = Cabin.objects.get(name=selected_date['cabinName'])
+                    date = string_to_date(selected_date['dateKey'])
+                    reservation = Reservation(
+                        cabin=cabin,
+                        date=date,
+                        members=selected_date['members'],
+                        non_members=selected_date['nonMembers'],
+                        meta_data=metadata)
+                    reservation.save()
                 return metadata
         except AssertionError as e:
             raise serializers.ValidationError(e)
