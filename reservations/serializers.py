@@ -4,6 +4,7 @@ from utils.dateutils import daterange
 from django.db.models import Sum, F
 from django.db.models.functions import Coalesce
 from django.db import transaction
+from utils.validators import validate_selected_dates
 
 
 class CabinSerializer(serializers.ModelSerializer):
@@ -49,20 +50,27 @@ class ReservationItemSerializer(serializers.ModelSerializer):
 
 
 class ReservationMetaDataSerializer(serializers.ModelSerializer):
-    reservation_items = serializers.PrimaryKeyRelatedField(
-        queryset=Reservation.objects.all(), many=True)
-
     class Meta:
         model = ReservationMetaData
         fields = '__all__'
 
     def create(self, validated_data):
-        with transaction.atomic():
-            metadata = super().create(validated_data)
-            metadata.created_by = self.context['request'].user
-            metadata.save()
-            assert False
-            return metadata
+        try:
+            with transaction.atomic():
+                metadata = super().create(validated_data)
+                user = self.context['request'].user
+                metadata.created_by = user
+                metadata.save()
+                if not metadata.should_pay:
+                    assert user.is_cabin_board, 'Only cabin board members can reserve free cabins'
+                selected_dates = self.initial_data['selected_dates']
+                assert validate_selected_dates(
+                    selected_dates,
+                    user.is_cabin_board), 'Selected dates are invalid'
+                assert False, 'Fallback error'
+                return metadata
+        except AssertionError as e:
+            raise serializers.ValidationError(e)
 
 
 class PublicReservationMetaDataSerializer(serializers.ModelSerializer):
