@@ -1,4 +1,4 @@
-from datetime import timedelta, date
+from datetime import timedelta, date, datetime
 from utils.dateutils import string_to_date
 
 
@@ -16,6 +16,9 @@ def validate_selected_dates(selected_dates, is_cabin_board):
         return False
     # Verify sequential dates
     dates = list(map(lambda s: string_to_date(s['dateKey']), selected_dates))
+    for date in dates:
+        if date < datetime.now().date():
+            return False
     dates.sort()
     for i in range(len(dates) - 1):
         if not dates[i] - dates[i + 1] == timedelta(days=-1):
