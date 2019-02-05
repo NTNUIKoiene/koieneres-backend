@@ -17,7 +17,8 @@ class ReservationDataViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 class PublicReservationDataViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = ReservationMetaData.objects.all()
+    queryset = ReservationMetaData.objects.filter(
+        reservation_items__date__gte=datetime.date.today())
     serializer_class = PublicReservationMetaDataSerializer
     permission_classes = (permissions.AllowAny, )
 
