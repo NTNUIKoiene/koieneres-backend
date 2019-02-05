@@ -32,11 +32,9 @@ class StatusSerializer(serializers.ModelSerializer):
             date__gte=from_date, date__lte=to_date, cabin=instance).values(
                 'members', 'non_members', 'date')
         for reservation in reservations:
-            data[str(reservation['date'])] = {
-                'is_closed': False,
-                'booked': reservation['members'] + reservation['non_members']
-            }
-
+            data[str(
+                reservation['date']
+            )]['booked'] += reservation['members'] + reservation['non_members']
         return data
 
     class Meta:
@@ -74,13 +72,13 @@ class ReservationMetaDataSerializer(serializers.ModelSerializer):
                 # TODO: Validate is closed
                 # Create reservations
                 for selected_date in selected_dates:
-                    cabin = Cabin.objects.get(name=selected_date['cabinName'])
-                    date = string_to_date(selected_date['dateKey'])
+                    cabin = Cabin.objects.get(name=selected_date['name'])
+                    date = string_to_date(selected_date['date_key'])
                     reservation = Reservation(
                         cabin=cabin,
                         date=date,
                         members=selected_date['members'],
-                        non_members=selected_date['nonMembers'],
+                        non_members=selected_date['non_members'],
                         meta_data=metadata)
                     reservation.save()
                 return metadata

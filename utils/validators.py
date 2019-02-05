@@ -11,11 +11,11 @@ def validate_selected_dates(selected_dates, is_cabin_board):
     if len(selected_dates) > 3 and not is_cabin_board:
         return False
     # Verify equal cabins
-    names = list(map(lambda s: s['cabinName'], selected_dates))
+    names = list(map(lambda s: s['name'], selected_dates))
     if not names.count(names[0]) == len(names):
         return False
     # Verify sequential dates
-    dates = list(map(lambda s: string_to_date(s['dateKey']), selected_dates))
+    dates = list(map(lambda s: string_to_date(s['date_key']), selected_dates))
     for date in dates:
         if date < datetime.now().date():
             return False
