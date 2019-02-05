@@ -13,6 +13,7 @@ django-cors-headers==2.4.0
 django-extensions==2.1.4
 django-rest-swagger==2.2.0
 djangorestframework==3.9.1
+djangorestframework-camel-case==1.0.3
 djangorestframework-jwt==1.11.0
 docker==3.7.0
 docker-compose==1.23.2

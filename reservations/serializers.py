@@ -32,8 +32,10 @@ class StatusSerializer(serializers.ModelSerializer):
             date__gte=from_date, date__lte=to_date, cabin=instance).values(
                 'members', 'non_members', 'date')
         for reservation in reservations:
-            data[str(reservation['date']
-                     )] = reservation['members'] + reservation['non_members']
+            data[str(reservation['date'])] = {
+                'is_closed': False,
+                'booked': reservation['members'] + reservation['non_members']
+            }
 
         return data
 
