@@ -57,6 +57,9 @@ class StatusViewSet(viewsets.ReadOnlyModelViewSet):
             'to': string_to_date(to_date)
         }
 
+    def paginate_queryset(self, queryset, view=None):
+        return None
+
 
 class CreateReservationViewSet(mixins.CreateModelMixin,
                                viewsets.GenericViewSet):

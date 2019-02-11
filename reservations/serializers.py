@@ -51,6 +51,7 @@ class ReservationItemSerializer(serializers.ModelSerializer):
 
 
 class ReservationMetaDataSerializer(serializers.ModelSerializer):
+    reservation_items = ReservationItemSerializer(many=True, read_only=True)
     class Meta:
         model = ReservationMetaData
         fields = '__all__'

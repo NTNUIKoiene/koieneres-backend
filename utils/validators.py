@@ -23,5 +23,6 @@ def validate_selected_dates(selected_dates, is_cabin_board):
     for i in range(len(dates) - 1):
         if not dates[i] - dates[i + 1] == timedelta(days=-1):
             return False
+    # TODO: Dates in past?
 
     return True
