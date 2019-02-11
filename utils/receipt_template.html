@@ -1,0 +1,67 @@
+<html>
+
+<head>
+  <title>Reservasjonskvittering</title>
+  <style>
+    @import url("https://fonts.googleapis.com/css?family=Libre+Barcode+128");
+
+    body {
+      font-family: Roboto, Verdana, Geneva, Tahoma, sans-serif;
+      font-size: 0.8em;
+    }
+
+    .logo {
+      position: fixed;
+      right: 0;
+      top: 0;
+    }
+
+    .barcode-wrapper {
+      text-align: center;
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+    }
+
+    .barcode {
+      width: 50%;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>NTNUI Koiene</h1>
+  <h2>Reservasjonskvittering #{{id}}</h2>
+  <img class="logo" src="http://org.ntnu.no/koiene/ikon/koiene_logo.png" />
+  <div>
+    <h3>Kundeinformasjon:</h3>
+    Medlemsnummer: <b>{{membership_number}}</b><br>
+    Navn: <b>{{name}}</b><br>
+    Telefon: <b>{{phone}}</b><br>
+    Email: <b>{{email}}</b><br>
+  </div>
+  <div>
+    <h3>Reservasjonsinformasjon:</h3>
+    Koie: <b>{{reservation_items.0.cabin.name}}</b><br>
+    Artikkelnummer: <b>{{reservation_items.0.cabin.article_number}}</b><br>
+    Pris: <b>{{reservation_items.0.cabin.member_price}} / {{reservation_items.0.cabin.non_member_price}} NOK</b>
+    <br>
+    Datoer:
+    <ul>
+      {% for resitem in reservation_items %}
+      <li><b>{{resitem.date|date:"Y-m-d"}}, {{resitem.members}} medlemmer, {{resitem.non_members}} ikke-medlemmer</b></li>
+      {% endfor %}
+    </ul>
+    <br><br>
+    {% if reservation.should_pay %}
+    <b>Husk å betale for reservasjonen hos SIT!</b><br>
+    {% else %}
+    <b>Reservasjonen er gratis!</b><br>
+    {% endif %}
+  </div>
+  <div class="barcode-wrapper">
+    <img class="barcode" src={{barcode}}>
+  </div>
+</body>
+
+</html>

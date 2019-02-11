@@ -5,8 +5,12 @@ from django.shortcuts import render
 from .models import Reservation, ReservationMetaData, Cabin
 from .serializers import ReservationMetaDataSerializer, PublicReservationMetaDataSerializer, StatusSerializer
 from rest_framework import viewsets, permissions, mixins
+from django.core.files.storage import FileSystemStorage
 from rest_framework.response import Response
+from django.http import HttpResponse, FileResponse
+from rest_framework.decorators import action
 from utils.dateutils import compute_reservation_period, string_to_date
+from utils.pdf import generate_pdf
 import datetime
 
 
@@ -14,6 +18,17 @@ class ReservationDataViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = ReservationMetaData.objects.all()
     serializer_class = ReservationMetaDataSerializer
     permission_classes = (permissions.IsAuthenticated, )
+
+    @action(detail=True, methods=['GET'])
+    def receipt(self, request, pk=None):
+        reservation_metadata = ReservationMetaData.objects.get(id=pk)
+        reservation_items = Reservation.objects.filter(meta_data=reservation_metadata)
+        generate_pdf(reservation_metadata, reservation_items)
+        fs = FileSystemStorage('/tmp')
+        with fs.open(f"{pk}.pdf") as pdf:
+            response = HttpResponse(pdf, content_type='application/pdf')
+            response['Content-Disposition'] = f"inline; filename=kvittering_{reservation_metadata.id}.pdf"
+            return response
 
 
 class PublicReservationDataViewSet(viewsets.ReadOnlyModelViewSet):

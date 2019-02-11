@@ -70,7 +70,7 @@ ROOT_URLCONF = 'koieneres.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': ['utils'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
