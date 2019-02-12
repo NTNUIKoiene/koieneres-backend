@@ -19,8 +19,6 @@ def generate_pdf(reservation, reservation_items):
 
     encoded_string = 'data:image/png;base64,' + encoded_string
 
-    print(encoded_string)
-
     html_string = render_to_string('receipt_template.html', {
         'id': reservation.id,
         'membership_number': reservation.membership_number,
