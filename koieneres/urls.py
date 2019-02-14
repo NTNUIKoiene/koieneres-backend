@@ -16,6 +16,7 @@ Including another URLconf
 from django.conf.urls import url, include
 from django.contrib import admin
 from reservations import views
+from users import views as userviews
 from rest_framework import routers
 from rest_framework_jwt.views import obtain_jwt_token, refresh_jwt_token, verify_jwt_token
 from rest_framework_swagger.views import get_swagger_view
@@ -46,6 +47,8 @@ router.register(
     r'reservation-period',
     views.ReservationPeriodViewSet,
     base_name='res-period')
+router.register(
+    r'current-user', userviews.CurrentUserViewSet, base_name='current-user')
 
 urlpatterns = [
     url('^api/', include(router.urls)),
