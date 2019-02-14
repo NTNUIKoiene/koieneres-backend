@@ -72,9 +72,12 @@ class ReservationMetaDataSerializer(serializers.ModelSerializer):
                 # TODO: Validate reservation period
                 # TODO: Validate is closed
                 # Create reservations
+                total_price = 0
                 for selected_date in selected_dates:
                     cabin = Cabin.objects.get(name=selected_date['name'])
                     date = string_to_date(selected_date['date_key'])
+                    total_price += selected_date['members'] * cabin.member_price
+                    total_price += selected_date['non_members'] * cabin.non_member_price
                     reservation = Reservation(
                         cabin=cabin,
                         date=date,
@@ -82,6 +85,8 @@ class ReservationMetaDataSerializer(serializers.ModelSerializer):
                         non_members=selected_date['non_members'],
                         meta_data=metadata)
                     reservation.save()
+                metadata.total_price = total_price
+                metadata.save()
                 return metadata
         except AssertionError as e:
             raise serializers.ValidationError(e)

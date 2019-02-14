@@ -24,6 +24,7 @@ class ReservationMetaData(models.Model):
     email = models.EmailField()
     should_pay = models.BooleanField()
     is_paid = models.BooleanField(default=False)
+    total_price = models.FloatField(default=0)
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
