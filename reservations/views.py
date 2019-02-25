@@ -23,12 +23,10 @@ class ReservationDataViewSet(viewsets.ReadOnlyModelViewSet):
     def receipt(self, request, pk=None):
         reservation_metadata = ReservationMetaData.objects.get(id=pk)
         reservation_items = Reservation.objects.filter(meta_data=reservation_metadata)
-        generate_pdf(reservation_metadata, reservation_items)
-        fs = FileSystemStorage('/tmp')
-        with fs.open(f"{pk}.pdf") as pdf:
-            response = HttpResponse(pdf, content_type='application/pdf')
-            response['Content-Disposition'] = f"inline; filename=kvittering_{reservation_metadata.id}.pdf"
-            return response
+        response = HttpResponse(content_type='application/pdf')
+        response['Content-Disposition'] = f"inline; filename=kvittering_{reservation_metadata.id}.pdf"
+        generate_pdf(response, reservation_metadata, reservation_items)
+        return response
 
 
 class PublicReservationDataViewSet(viewsets.ReadOnlyModelViewSet):

@@ -7,14 +7,16 @@ from barcode.writer import ImageWriter
 import base64
 
 
-def generate_pdf(reservation, reservation_items):
+def generate_pdf(response, reservation, reservation_items):
     id = reservation.id
     fp = BytesIO()
     EAN = barcode.get_barcode_class('ean13')
     ean = EAN('5901234123457', writer=ImageWriter())
     ean.save(f"/tmp/{id}")
 
-    encoded_string = base64.b64encode(open(f"/tmp/{id}.png", "rb").read()).decode()
+    encoded_string = ""
+    with open(f"/tmp/{id}.png", "rb") as f:
+        encoded_string = base64.b64encode(f.read()).decode()
 
 
     encoded_string = 'data:image/png;base64,' + encoded_string
@@ -31,5 +33,5 @@ def generate_pdf(reservation, reservation_items):
     })
 
     html = HTML(string=html_string)
-    html.write_pdf(target=f"/tmp/{id}.pdf")
+    html.write_pdf(response)
 
