@@ -12,19 +12,34 @@ from rest_framework.decorators import action
 from utils.dateutils import compute_reservation_period, string_to_date
 from utils.pdf import generate_pdf
 import datetime
+from django_filters import rest_framework as filters
+
+
+class ReservationDataFilter(filters.FilterSet):
+    after_date = filters.DateFilter(
+        field_name='reservation_items__date', lookup_expr='gte')
+
+    class Meta:
+        model = ReservationMetaData
+        fields = ('is_paid', 'should_pay', 'id')
 
 
 class ReservationDataViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = ReservationMetaData.objects.all()
     serializer_class = ReservationMetaDataSerializer
     permission_classes = (permissions.IsAuthenticated, )
+    filterset_class = ReservationDataFilter
+
+    def get_queryset(self):
+        return ReservationMetaData.objects.all()
 
     @action(detail=True, methods=['GET'])
     def receipt(self, request, pk=None):
         reservation_metadata = ReservationMetaData.objects.get(id=pk)
-        reservation_items = Reservation.objects.filter(meta_data=reservation_metadata)
+        reservation_items = Reservation.objects.filter(
+            meta_data=reservation_metadata)
         response = HttpResponse(content_type='application/pdf')
-        response['Content-Disposition'] = f"inline; filename=kvittering_{reservation_metadata.id}.pdf"
+        response[
+            'Content-Disposition'] = f"inline; filename=kvittering_{reservation_metadata.id}.pdf"
         generate_pdf(response, reservation_metadata, reservation_items)
         return response
 
