@@ -17,7 +17,7 @@ from django_filters import rest_framework as filters
 
 class ReservationDataFilter(filters.FilterSet):
     after_date = filters.DateFilter(
-        field_name='reservation_items__date', lookup_expr='gte')
+        field_name='reservation_items__date', lookup_expr='gte', distinct=True)
 
     class Meta:
         model = ReservationMetaData
