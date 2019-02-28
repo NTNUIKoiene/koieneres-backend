@@ -114,6 +114,7 @@ class ReservationPeriodViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 class CabinClosingViewSet(viewsets.ModelViewSet):
+    http_method_names = ['get', 'post', 'head', 'delete']
 
     def get_queryset(self):
         return CabinClosing.objects.all()
