@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 
 from django.shortcuts import render
 from .models import Reservation, ReservationMetaData, Cabin, CabinClosing
-from .serializers import ReservationMetaDataSerializer, PublicReservationMetaDataSerializer, StatusSerializer, CabinClosingSerializer, CabinClosingListSerializer
+from .serializers import ReservationMetaDataSerializer, PublicReservationMetaDataSerializer, StatusSerializer, CabinClosingSerializer, CabinClosingListSerializer, CabinSerializer
 from rest_framework import viewsets, permissions, mixins
 from django.core.files.storage import FileSystemStorage
 from rest_framework.response import Response
@@ -123,3 +123,8 @@ class CabinClosingViewSet(viewsets.ModelViewSet):
         if self.action == 'list':
             return CabinClosingListSerializer
         return CabinClosingSerializer
+
+
+class CabinViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
+    serializer_class = CabinSerializer
+    queryset = Cabin.objects.all()

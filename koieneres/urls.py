@@ -53,6 +53,8 @@ router.register(
 router.register(
     r'cabin-closings', views.CabinClosingViewSet, base_name='cabin-closings')
 
+router.register(r'cabin', views.CabinViewSet, base_name='cabin')
+
 urlpatterns = [
     url('^api/', include(router.urls)),
     url(r'^admin/', admin.site.urls),
