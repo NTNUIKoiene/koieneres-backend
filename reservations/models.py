@@ -16,6 +16,16 @@ class Cabin(models.Model):
     def __str__(self):
         return self.name
 
+class CabinClosing(models.Model):
+    cabin = models.ForeignKey(Cabin, on_delete=models.CASCADE)
+    from_date = models.DateField()
+    to_date = models.DateField()
+    created_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        related_name='closings',
+        on_delete=models.SET_NULL,
+        null=True)
+
 
 class ReservationMetaData(models.Model):
     membership_number = models.TextField()
