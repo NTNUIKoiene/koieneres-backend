@@ -14,12 +14,14 @@ class Cabin(models.Model):
     non_member_price = models.FloatField(default=80)
 
     def __str__(self):
-        return self.name
+        return self.name + f" ({self.id})"
+
 
 class CabinClosing(models.Model):
     cabin = models.ForeignKey(Cabin, on_delete=models.CASCADE)
     from_date = models.DateField()
     to_date = models.DateField()
+    comment = models.TextField(default="")
     created_by = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         related_name='closings',

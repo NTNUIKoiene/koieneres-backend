@@ -50,6 +50,9 @@ router.register(
 router.register(
     r'current-user', userviews.CurrentUserViewSet, base_name='current-user')
 
+router.register(
+    r'cabin-closings', views.CabinClosingViewSet, base_name='cabin-closings')
+
 urlpatterns = [
     url('^api/', include(router.urls)),
     url(r'^admin/', admin.site.urls),

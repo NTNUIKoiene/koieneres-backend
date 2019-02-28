@@ -1,17 +1,43 @@
 from rest_framework import serializers
-from .models import Reservation, ReservationMetaData, Cabin
+from .models import Reservation, ReservationMetaData, Cabin, CabinClosing
 from utils.dateutils import daterange
 from django.db.models import Sum, F
 from django.db.models.functions import Coalesce
 from django.db import transaction
 from utils.validators import validate_selected_dates
 from utils.dateutils import string_to_date
+from django.core.exceptions import PermissionDenied
 
 
 class CabinSerializer(serializers.ModelSerializer):
     class Meta:
         model = Cabin
         fields = '__all__'
+
+
+class CabinClosingListSerializer(serializers.ModelSerializer):
+    cabin = CabinSerializer(many=False, read_only=True)
+    class Meta:
+        model = CabinClosing
+        exclude = ('created_by', )
+
+class CabinClosingSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = CabinClosing
+        exclude = ('created_by', )
+    
+    def create(self, validated_data):
+        user = self.context['request'].user
+        if not user.is_cabin_board:
+            raise PermissionDenied()
+        if not validated_data['from_date'] < validated_data['to_date']:
+            raise serializers.ValidationError('From date must be before to date.')
+        closing = super().create(validated_data)
+        closing.created_by = user
+        closing.save()
+        return closing
+
 
 
 class StatusSerializer(serializers.ModelSerializer):
@@ -52,6 +78,7 @@ class ReservationItemSerializer(serializers.ModelSerializer):
 
 class ReservationMetaDataSerializer(serializers.ModelSerializer):
     reservation_items = ReservationItemSerializer(many=True, read_only=True)
+
     class Meta:
         model = ReservationMetaData
         fields = '__all__'
@@ -77,7 +104,8 @@ class ReservationMetaDataSerializer(serializers.ModelSerializer):
                     cabin = Cabin.objects.get(name=selected_date['name'])
                     date = string_to_date(selected_date['date_key'])
                     total_price += selected_date['members'] * cabin.member_price
-                    total_price += selected_date['non_members'] * cabin.non_member_price
+                    total_price += selected_date[
+                        'non_members'] * cabin.non_member_price
                     reservation = Reservation(
                         cabin=cabin,
                         date=date,

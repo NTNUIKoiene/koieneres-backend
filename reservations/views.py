@@ -2,8 +2,8 @@
 from __future__ import unicode_literals
 
 from django.shortcuts import render
-from .models import Reservation, ReservationMetaData, Cabin
-from .serializers import ReservationMetaDataSerializer, PublicReservationMetaDataSerializer, StatusSerializer
+from .models import Reservation, ReservationMetaData, Cabin, CabinClosing
+from .serializers import ReservationMetaDataSerializer, PublicReservationMetaDataSerializer, StatusSerializer, CabinClosingSerializer, CabinClosingListSerializer
 from rest_framework import viewsets, permissions, mixins
 from django.core.files.storage import FileSystemStorage
 from rest_framework.response import Response
@@ -111,3 +111,14 @@ class ReservationPeriodViewSet(viewsets.ReadOnlyModelViewSet):
 
     def retrieve(self, request, pk=None):
         return Response(compute_reservation_period(string_to_date(pk)))
+
+
+class CabinClosingViewSet(viewsets.ModelViewSet):
+
+    def get_queryset(self):
+        return CabinClosing.objects.all()
+
+    def get_serializer_class(self):
+        if self.action == 'list':
+            return CabinClosingListSerializer
+        return CabinClosingSerializer
