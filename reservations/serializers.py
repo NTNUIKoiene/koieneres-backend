@@ -17,27 +17,28 @@ class CabinSerializer(serializers.ModelSerializer):
 
 class CabinClosingListSerializer(serializers.ModelSerializer):
     cabin = CabinSerializer(many=False, read_only=True)
+
     class Meta:
         model = CabinClosing
         exclude = ('created_by', )
+
 
 class CabinClosingSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = CabinClosing
         exclude = ('created_by', )
-    
+
     def create(self, validated_data):
         user = self.context['request'].user
         if not user.is_cabin_board:
             raise PermissionDenied()
         if not validated_data['from_date'] < validated_data['to_date']:
-            raise serializers.ValidationError('From date must be before to date.')
+            raise serializers.ValidationError(
+                'From date must be before to date.')
         closing = super().create(validated_data)
         closing.created_by = user
         closing.save()
         return closing
-
 
 
 class StatusSerializer(serializers.ModelSerializer):
@@ -54,6 +55,12 @@ class StatusSerializer(serializers.ModelSerializer):
         data = {}
         for date in daterange(from_date, to_date):
             data[str(date)] = {'is_closed': False, 'booked': 0}
+        closings = CabinClosing.objects.filter(
+            cabin=instance, from_date__gte=from_date)
+        for closing in closings:
+            for date in daterange(closing.from_date,
+                                  min(closing.to_date, to_date)):
+                data[str(date)]['is_closed'] = True
         reservations = Reservation.objects.filter(
             date__gte=from_date, date__lte=to_date, cabin=instance).values(
                 'members', 'non_members', 'date')
