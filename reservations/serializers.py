@@ -126,6 +126,18 @@ class ReservationMetaDataSerializer(serializers.ModelSerializer):
         except AssertionError as e:
             raise serializers.ValidationError(e)
 
+    def update(self, instance, validated_data):
+        instance.membership_number = validated_data.get(
+            'membership_number', instance.membership_number)
+        instance.name = validated_data.get('name', instance.name)
+        instance.phone = validated_data.get('phone', instance.phone)
+        instance.email = validated_data.get('email', instance.email)
+        instance.should_pay = validated_data.get('should_pay',
+                                                 instance.should_pay)
+        instance.is_paid = validated_data.get('is_paid', instance.is_paid)
+        instance.save()
+        return instance
+
 
 class PublicReservationMetaDataSerializer(serializers.ModelSerializer):
     reservation_items = ReservationItemSerializer(many=True, read_only=True)

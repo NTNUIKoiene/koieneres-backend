@@ -24,10 +24,12 @@ class ReservationDataFilter(filters.FilterSet):
         fields = ('is_paid', 'should_pay', 'id')
 
 
-class ReservationDataViewSet(viewsets.ReadOnlyModelViewSet):
+class ReservationDataViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin,
+                             mixins.UpdateModelMixin, viewsets.GenericViewSet):
     serializer_class = ReservationMetaDataSerializer
     permission_classes = (permissions.IsAuthenticated, )
     filterset_class = ReservationDataFilter
+    http_method_names = ['get', 'head', 'patch']
 
     def get_queryset(self):
         return ReservationMetaData.objects.all()

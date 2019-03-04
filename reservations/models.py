@@ -50,7 +50,7 @@ class ReservationMetaData(models.Model):
         ordering = ('-created_at', )
 
     def __str__(self):
-        return str(self.created_at) + " - " + self.email
+        return str(self.created_at) + " - " + self.email + f" (#{self.id})"
 
 
 class Reservation(models.Model):
