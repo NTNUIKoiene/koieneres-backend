@@ -132,6 +132,11 @@ class ReservationMetaDataSerializer(serializers.ModelSerializer):
         instance.name = validated_data.get('name', instance.name)
         instance.phone = validated_data.get('phone', instance.phone)
         instance.email = validated_data.get('email', instance.email)
+        user = self.context['request'].user
+        if not validated_data.get('should_pay',
+                                  True) and not user.is_cabin_board:
+            raise serializers.ValidationError(
+                'must be cabin board to mark reservation as free')
         instance.should_pay = validated_data.get('should_pay',
                                                  instance.should_pay)
         instance.is_paid = validated_data.get('is_paid', instance.is_paid)
