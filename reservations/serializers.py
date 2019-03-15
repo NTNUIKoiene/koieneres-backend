@@ -20,6 +20,20 @@ class ExtendedPeriodSerializer(serializers.ModelSerializer):
         model = ExtendedPeriod
         fields = '__all__'
 
+    def create(self, validated_data):
+        user = self.context['request'].user
+        if not user.is_cabin_board:
+            raise PermissionDenied()
+        if not validated_data['reservation_date'] < validated_data['end_date']:
+            raise serializers.ValidationError(
+                'Reservation date must be before end date')
+        if not validated_data['reservation_date'].weekday() == 2:
+            raise serializers.ValidationError(
+                'Reservation date must be a wednesday')
+        if not validated_data['end_date'].weekday() == 3:
+            raise serializers.ValidationError('End date must be a thursday')
+        return super().create(validated_data)
+
 
 class CabinClosingListSerializer(serializers.ModelSerializer):
     cabin = CabinSerializer(many=False, read_only=True)

@@ -70,5 +70,9 @@ class Reservation(models.Model):
 class ExtendedPeriod(models.Model):
     # Wednesday where reservation starts
     reservation_date = models.DateField(db_index=True)
+    # Thursday where it ends
     end_date = models.DateField(db_index=True)
     description = models.TextField()
+
+    def __str__(self):
+        return f'{self.description}, {self.reservation_date} -> {self.end_date}'
