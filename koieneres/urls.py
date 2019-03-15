@@ -55,6 +55,11 @@ router.register(
 
 router.register(r'cabin', views.CabinViewSet, base_name='cabin')
 
+router.register(
+    r'extended-periods',
+    views.ExtendedPeriodViewSet,
+    base_name='extended-periods')
+
 urlpatterns = [
     url('^api/', include(router.urls)),
     url(r'^admin/', admin.site.urls),

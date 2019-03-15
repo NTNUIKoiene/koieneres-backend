@@ -3,8 +3,6 @@ from django.conf import settings
 
 from django.db import models
 
-# Create your models here.
-
 
 class Cabin(models.Model):
     article_number = models.IntegerField()
@@ -67,3 +65,10 @@ class Reservation(models.Model):
         on_delete=models.CASCADE,
         related_name='reservation_items',
         db_index=True)
+
+
+class ExtendedPeriod(models.Model):
+    # Wednesday where reservation starts
+    reservation_date = models.DateField(db_index=True)
+    end_date = models.DateField(db_index=True)
+    description = models.TextField()

@@ -2,8 +2,8 @@
 from __future__ import unicode_literals
 
 from django.shortcuts import render
-from .models import Reservation, ReservationMetaData, Cabin, CabinClosing
-from .serializers import ReservationMetaDataSerializer, PublicReservationMetaDataSerializer, StatusSerializer, CabinClosingSerializer, CabinClosingListSerializer, CabinSerializer
+from .models import Reservation, ReservationMetaData, Cabin, CabinClosing, ExtendedPeriod
+from .serializers import ReservationMetaDataSerializer, PublicReservationMetaDataSerializer, StatusSerializer, CabinClosingSerializer, CabinClosingListSerializer, CabinSerializer, ExtendedPeriodSerializer
 from rest_framework import viewsets, permissions, mixins
 from django.core.files.storage import FileSystemStorage
 from rest_framework.response import Response
@@ -130,3 +130,9 @@ class CabinClosingViewSet(viewsets.ModelViewSet):
 class CabinViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
     serializer_class = CabinSerializer
     queryset = Cabin.objects.all()
+
+
+class ExtendedPeriodViewSet(viewsets.ModelViewSet):
+    http_method_names = ['get', 'post', 'head', 'delete']
+    queryset = ExtendedPeriod.objects.all()
+    serializer_class = ExtendedPeriodSerializer

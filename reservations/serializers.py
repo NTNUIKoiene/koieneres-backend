@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Reservation, ReservationMetaData, Cabin, CabinClosing
+from .models import Reservation, ReservationMetaData, Cabin, CabinClosing, ExtendedPeriod
 from utils.dateutils import daterange
 from django.db.models import Sum, F
 from django.db.models.functions import Coalesce
@@ -12,6 +12,12 @@ from django.core.exceptions import PermissionDenied
 class CabinSerializer(serializers.ModelSerializer):
     class Meta:
         model = Cabin
+        fields = '__all__'
+
+
+class ExtendedPeriodSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ExtendedPeriod
         fields = '__all__'
 
 
