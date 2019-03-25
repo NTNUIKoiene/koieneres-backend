@@ -64,5 +64,5 @@ urlpatterns = [
     url('^api/', include(router.urls)),
     url(r'^admin/', admin.site.urls),
     url(r'^authorization/', include(authorization_urlpatterns)),
-    url(r'^swagger/', get_swagger_view(title='Koieneres API'))
+    url(r'^swagger/', get_swagger_view(title='Koieneres API')),
 ]

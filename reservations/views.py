@@ -52,6 +52,18 @@ class PublicReservationDataViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = PublicReservationMetaDataSerializer
     permission_classes = (permissions.AllowAny, )
 
+    # TODO: Change which fields are shown on public receipt
+    @action(detail=True, methods=['GET'])
+    def receipt(self, request, pk=None):
+        reservation_metadata = ReservationMetaData.objects.get(id=pk)
+        reservation_items = Reservation.objects.filter(
+            meta_data=reservation_metadata)
+        response = HttpResponse(content_type='application/pdf')
+        response[
+            'Content-Disposition'] = f"inline; filename=kvittering_{reservation_metadata.id}.pdf"
+        generate_pdf(response, reservation_metadata, reservation_items)
+        return response
+
 
 class StatusViewSet(viewsets.ReadOnlyModelViewSet):
     '''

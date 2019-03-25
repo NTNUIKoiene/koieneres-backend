@@ -2,6 +2,9 @@
 from django.conf import settings
 
 from django.db import models
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from utils.mail import send_reservation_receipt
 
 
 class Cabin(models.Model):
@@ -76,3 +79,11 @@ class ExtendedPeriod(models.Model):
 
     def __str__(self):
         return f'{self.description}, {self.reservation_date} -> {self.end_date}'
+
+
+@receiver(post_save, sender=ReservationMetaData)
+def send_confirmation_mail(sender, instance, created, **kwargs):
+    if created:
+        recipient = instance.email
+        res_id = instance.id
+        send_reservation_receipt(res_id, recipient)
