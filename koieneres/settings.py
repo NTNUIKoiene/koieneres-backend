@@ -19,9 +19,6 @@ from sentry_sdk.integrations.django import DjangoIntegration
 if not os.getenv('GAE_APPLICATION', None):
     load_dotenv(verbose=True)
 
-sentry_sdk.init(
-    dsn=os.getenv('SENTRY_DSN'), integrations=[DjangoIntegration()])
-
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -35,6 +32,8 @@ SECRET_KEY = os.getenv('SECRET')
 if os.getenv('GAE_APPLICATION', None):
     DEBUG = False
     SERVER_URL = 'https://koieneres-api-dev.appspot.com'
+    sentry_sdk.init(
+        dsn=os.getenv('SENTRY_DSN'), integrations=[DjangoIntegration()])
 else:
     DEBUG = True
     SERVER_URL = 'http://localhost:8000'
