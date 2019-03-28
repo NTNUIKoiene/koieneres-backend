@@ -65,3 +65,4 @@ webencodings==0.5.1
 websocket-client==0.54.0
 wrapt==1.11.1
 yapf==0.25.0
+sentry-sdk==0.7.7
