@@ -32,6 +32,10 @@ This proxy enables the Django application running locally to communicate with th
 
 ### Deploy API
 
+#### Digitalocean and docker:
+
+https://www.digitalocean.com/community/tutorials/how-to-secure-a-containerized-node-js-application-with-nginx-let-s-encrypt-and-docker-compose
+
 #### Create secret config file
 
 Create a file called `env.yaml` and add the required secrets:
