@@ -47,6 +47,7 @@ if os.getenv('PROD', None):
 AUTH_USER_MODEL = 'users.User'
 
 ALLOWED_HOSTS = ['*']
+USE_X_FORWARDED_HOST = True
 
 # Application definition
 
