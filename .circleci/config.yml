@@ -8,10 +8,9 @@ jobs:
           fingerprints:
             - $FINGERPRINT
       - run:
-          name: Log in to server
-          command: ssh $SSH_USER@$SSH_HOST
-      - run: cd koieneres-backend
-      - run: git pull
+          name: Deploy Over SSH
+          command: |
+            ssh $SSH_USER@$SSH_HOST "cd /koieneres-backend && git pull"
 
 workflows:
   version: 2
