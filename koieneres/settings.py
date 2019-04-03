@@ -38,6 +38,12 @@ else:
     DEBUG = True
     SERVER_URL = 'http://localhost:8000'
 
+if os.getenv('PROD', None):
+    DEBUG = False
+    SERVER_URL = 'https://api.koiene.no/'
+    sentry_sdk.init(
+        dsn=os.getenv('SENTRY_DSN'), integrations=[DjangoIntegration()])
+
 AUTH_USER_MODEL = 'users.User'
 
 ALLOWED_HOSTS = ['*']
