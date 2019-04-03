@@ -10,7 +10,7 @@ jobs:
       - run:
           name: Deploy Over SSH
           command: |
-            ssh $SSH_USER@$SSH_HOST "cd koieneres-backend && git pull"
+            ssh $SSH_USER@$SSH_HOST "cd koieneres-backend && git pull && docker-compose up -d --no-deps --build api"
 
 workflows:
   version: 2
