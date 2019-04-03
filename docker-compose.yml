@@ -17,6 +17,7 @@ services:
     ports:
       - "80:80"
     volumes:
+      - web-root:/var/www/html
       - ./nginx:/etc/nginx/conf.d
       - certbot-etc:/etc/letsencrypt
       - certbot-var:/var/lib/letsencrypt
@@ -37,6 +38,12 @@ services:
 volumes:
   certbot-etc:
   certbot-var:
+  web-root:
+    driver: local
+    driver_opts:
+      type: none
+      device: /root/www
+      o: bind
 
 networks:
   app-network:
