@@ -1,67 +1,23 @@
-# Python CircleCI 2.0 configuration file
-#
-# Check https://circleci.com/docs/2.0/language-python/ for more details
-#
 version: 2
 jobs:
-  build:
-    docker:
-      # specify the version you desire here
-      # use `-browsers` prefix for selenium tests, e.g. `3.6.1-browsers`
-      - image: circleci/python:3.6.1
-      
-      # Specify service dependencies here if necessary
-      # CircleCI maintains a library of pre-built images
-      # documented at https://circleci.com/docs/2.0/circleci-images/
-      # - image: circleci/postgres:9.4
-
-    working_directory: ~/repo
-
+  deploy:
+    machine:
+      enabled: true
     steps:
-      - checkout
-
-      # Download and cache dependencies
-      - restore_cache:
-          keys:
-          - v1-dependencies-{{ checksum "requirements.txt" }}
-          # fallback to using the latest cache if no exact match is found
-          - v1-dependencies-
-
+      - add_ssh_keys:
+          fingerprints:
+            - $FINGERPRINT
       - run:
-          name: install dependencies
-          command: |
-            python3 -m venv venv
-            . venv/bin/activate
-            pip install -r requirements.txt
-      
-      - run:
-          name: install gcloud
-          command: |
-            curl -sSL https://sdk.cloud.google.com > /tmp/gcl && bash /tmp/gcl --install-dir=~/gcloud --disable-prompts
+          name: Log in to server
+          command: ssh $SSH_USER@$SSH_HOST
+      - run: cd koieneres-backend
+      - run: git pull
 
-
-      - save_cache:
-          paths:
-            - ./venv
-            - ~/gcloud
-          key: v1-dependencies-{{ checksum "requirements.txt" }}
-        
-      # run tests!
-      # this example uses Django's built-in test-runner
-      # other common Python testing frameworks include pytest and nose
-      # https://pytest.org
-      # https://nose.readthedocs.io
-      - run: 
-          name: collect static files
-          command: |
-            . venv/bin/activate
-            python manage.py collectstatic
-      
-      - run:
-          name: deploy
-          command: |
-            echo $GCLOUD > /tmp/client-secret.json
-            sed -e "s# HOST# $DB_HOST#" -e "s# NAME# $DB_NAME#" -e "s# USER# $DB_USER#" -e "s# PASSWORD# $DB_PASSWORD#" -e "s# DJANGO_SECRET# $SECRET#" env.yaml.sample > env.yaml
-            ~/gcloud/google-cloud-sdk/bin/gcloud auth activate-service-account --key-file /tmp/client-secret.json
-            ~/gcloud/google-cloud-sdk/bin/gcloud config set project koieneres-api-dev
-            ~/gcloud/google-cloud-sdk/bin/gcloud app deploy
+workflows:
+  version: 2
+  build-and-deploy:
+    jobs:
+      - deploy:
+          filters:
+            branches:
+              only: master
