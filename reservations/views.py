@@ -1,18 +1,26 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from django.shortcuts import render
-from .models import Reservation, ReservationMetaData, Cabin, CabinClosing, ExtendedPeriod
-from .serializers import ReservationMetaDataSerializer, PublicReservationMetaDataSerializer, StatusSerializer, CabinClosingSerializer, CabinClosingListSerializer, CabinSerializer, ExtendedPeriodSerializer
-from rest_framework import viewsets, permissions, mixins
+import datetime
+
+from django.core.exceptions import ObjectDoesNotExist
 from django.core.files.storage import FileSystemStorage
-from rest_framework.response import Response
-from django.http import HttpResponse, FileResponse
+from django.http import FileResponse, Http404, HttpResponse
+from django.shortcuts import render
+from django_filters import rest_framework as filters
+from rest_framework import mixins, permissions, viewsets
 from rest_framework.decorators import action
+from rest_framework.response import Response
+
 from utils.dateutils import compute_reservation_period, string_to_date
 from utils.pdf import generate_pdf
-import datetime
-from django_filters import rest_framework as filters
+
+from .models import (Cabin, CabinClosing, ExtendedPeriod, Reservation,
+                     ReservationMetaData)
+from .serializers import (CabinClosingListSerializer, CabinClosingSerializer,
+                          CabinSerializer, ExtendedPeriodSerializer,
+                          PublicReservationMetaDataSerializer,
+                          ReservationMetaDataSerializer, StatusSerializer)
 
 
 class ReservationDataFilter(filters.FilterSet):
@@ -36,7 +44,10 @@ class ReservationDataViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin,
 
     @action(detail=True, methods=['GET'])
     def receipt(self, request, pk=None):
-        reservation_metadata = ReservationMetaData.objects.get(id=pk)
+        try:
+            reservation_metadata = ReservationMetaData.objects.get(id=pk)
+        except ObjectDoesNotExist:
+            raise Http404
         reservation_items = Reservation.objects.filter(
             meta_data=reservation_metadata)
         response = HttpResponse(content_type='application/pdf')
@@ -55,7 +66,10 @@ class PublicReservationDataViewSet(viewsets.ReadOnlyModelViewSet):
     # TODO: Change which fields are shown on public receipt
     @action(detail=True, methods=['GET'])
     def receipt(self, request, pk=None):
-        reservation_metadata = ReservationMetaData.objects.get(id=pk)
+        try:
+            reservation_metadata = ReservationMetaData.objects.get(id=pk)
+        except ObjectDoesNotExist:
+            raise Http404
         reservation_items = Reservation.objects.filter(
             meta_data=reservation_metadata)
         response = HttpResponse(content_type='application/pdf')

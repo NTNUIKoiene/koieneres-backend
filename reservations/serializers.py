@@ -1,12 +1,14 @@
-from rest_framework import serializers
-from .models import Reservation, ReservationMetaData, Cabin, CabinClosing, ExtendedPeriod
-from utils.dateutils import daterange
-from django.db.models import Sum, F
-from django.db.models.functions import Coalesce
-from django.db import transaction
-from utils.validators import validate_selected_dates
-from utils.dateutils import string_to_date
 from django.core.exceptions import PermissionDenied
+from django.db import transaction
+from django.db.models import F, Sum
+from django.db.models.functions import Coalesce
+from rest_framework import serializers
+
+from utils.dateutils import daterange, string_to_date
+from utils.validators import validate_selected_dates
+
+from .models import (Cabin, CabinClosing, ExtendedPeriod, Reservation,
+                     ReservationMetaData)
 
 
 class CabinSerializer(serializers.ModelSerializer):
