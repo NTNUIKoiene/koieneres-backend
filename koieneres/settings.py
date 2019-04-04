@@ -40,7 +40,7 @@ else:
 
 if os.getenv('PROD', None):
     DEBUG = False
-    SERVER_URL = 'https://api.koiene.no/'
+    SERVER_URL = 'https://api.koiene.no'
     # FORCE_SCRIPT_NAME = 'https://api.koiene.no/'
     sentry_sdk.init(
         dsn=os.getenv('SENTRY_DSN'), integrations=[DjangoIntegration()])
