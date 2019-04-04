@@ -15,48 +15,46 @@ pip install -r requirements.txt
 Create a file called `.env` and add the required secrets:
 
 ```
-DB_HOST=/cloudsql/[CONNECTION NAME]
+DB_HOST=[CONNECTION URL]
+DB_PORT=[PORT]
 DB_NAME=[DB NAME]
 DB_USER=[DB USERNAME]
 DB_PASSWORD=[DB PASSWORD]
 SECRET=[DJANGO SECRET KEY]
+EMAIL_HOST_USER=[EMAIL USER]
+EMAIL_HOST_PASSWORD=[EMAIL PASSWORD]
+EMAIL_HOST=[SMTP HOST]
+EMAIL_PORT=[SMTP PORT]
+EMAIL_USE_TLS = True
+SENTRY_DSN=[SENTRY_DSN]
 ```
 
-#### Start SQL Proxy
+#### Migrate the database
 
 ```
-./cloud_sql_proxy -instances="koieneres-api-dev:europe-north1:koieneres-api-dev-db"=tcp:3306
+python manage.py migrate
 ```
 
-This proxy enables the Django application running locally to communicate with the SQL database in Google Cloud.
-
-### Deploy API
-
-#### Digitalocean and docker:
-
-https://www.digitalocean.com/community/tutorials/how-to-secure-a-containerized-node-js-application-with-nginx-let-s-encrypt-and-docker-compose
-
-#### Create secret config file
-
-Create a file called `env.yaml` and add the required secrets:
+#### Start the application
 
 ```
-env_variables:
-  DB_HOST: "/cloudsql/[CONNECTION NAME]"
-  DB_NAME: [DB NAME]
-  DB_USER: [DB USERNAME]
-  DB_PASSWORD: [DB PASSWORD]
-  SECRET: [DJANGO SECRET KEY]
+python manage.py runserver
 ```
 
-#### Collect static files
+# CI/CD
+
+Changes to the `master`-branch are automatically deployed to production.
+
+## Sentry
+
+Koieneres uses [Sentry](https://sentry.io) to log errors that occur in production.
+
+# Server Setup
+
+The application runs on DigitalOcean using docker-compose. Docker-compose manages nginx and certificates. The only software required on the server is docker and docker-compose(`snap install docker`). To refresh certificates add the following line to the crontab file:
 
 ```
-python manage.py collectstatic
+0 12 * * * /root/koieneres-backend/ssl_renew.sh >> /var/log/cron.log 2>&1
 ```
 
-#### Deploy
-
-```
-gcloud app deploy
-```
+The setup is inspired by [this guide](https://www.digitalocean.com/community/tutorials/how-to-secure-a-containerized-node-js-application-with-nginx-let-s-encrypt-and-docker-compose).
