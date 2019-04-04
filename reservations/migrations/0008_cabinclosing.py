@@ -16,11 +16,24 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='CabinClosing',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id',
+                 models.AutoField(
+                     auto_created=True,
+                     primary_key=True,
+                     serialize=False,
+                     verbose_name='ID')),
                 ('from_date', models.DateField()),
                 ('to_date', models.DateField()),
-                ('cabin', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='reservations.Cabin')),
-                ('created_by', models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='closings', to=settings.AUTH_USER_MODEL)),
+                ('cabin',
+                 models.ForeignKey(
+                     on_delete=django.db.models.deletion.CASCADE,
+                     to='reservations.Cabin')),
+                ('created_by',
+                 models.ForeignKey(
+                     null=True,
+                     on_delete=django.db.models.deletion.SET_NULL,
+                     related_name='closings',
+                     to=settings.AUTH_USER_MODEL)),
             ],
         ),
     ]

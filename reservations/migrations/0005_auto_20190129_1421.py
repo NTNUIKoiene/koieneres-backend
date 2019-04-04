@@ -13,6 +13,7 @@ class Migration(migrations.Migration):
     operations = [
         migrations.AddIndex(
             model_name='reservation',
-            index=django.contrib.postgres.indexes.BrinIndex(fields=['date'], name='reservation_date_737521_brin'),
+            index=django.contrib.postgres.indexes.BrinIndex(
+                fields=['date'], name='reservation_date_737521_brin'),
         ),
     ]

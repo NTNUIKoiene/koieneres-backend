@@ -12,7 +12,7 @@ class Migration(migrations.Migration):
     operations = [
         migrations.AlterModelOptions(
             name='reservationmetadata',
-            options={'ordering': ('-created_at',)},
+            options={'ordering': ('-created_at', )},
         ),
         migrations.AddField(
             model_name='reservationmetadata',

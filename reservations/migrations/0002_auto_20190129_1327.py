@@ -18,16 +18,26 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='reservationmetadata',
             name='created_by',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='reservations', to=settings.AUTH_USER_MODEL),
+            field=models.ForeignKey(
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                related_name='reservations',
+                to=settings.AUTH_USER_MODEL),
         ),
         migrations.AddField(
             model_name='reservation',
             name='cabin',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='reservation_items', to='reservations.Cabin'),
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name='reservation_items',
+                to='reservations.Cabin'),
         ),
         migrations.AddField(
             model_name='reservation',
             name='meta_data',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='reservation_items', to='reservations.ReservationMetaData'),
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name='reservation_items',
+                to='reservations.ReservationMetaData'),
         ),
     ]
