@@ -41,14 +41,14 @@ else:
 if os.getenv('PROD', None):
     DEBUG = False
     SERVER_URL = 'https://api.koiene.no/'
-    FORCE_SCRIPT_NAME = 'https://api.koiene.no/'
+    # FORCE_SCRIPT_NAME = 'https://api.koiene.no/'
     sentry_sdk.init(
         dsn=os.getenv('SENTRY_DSN'), integrations=[DjangoIntegration()])
 
 AUTH_USER_MODEL = 'users.User'
 
 ALLOWED_HOSTS = ['*']
-USE_X_FORWARDED_HOST = True
+# USE_X_FORWARDED_HOST = True
 
 # Application definition
 
