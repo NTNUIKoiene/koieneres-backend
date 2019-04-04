@@ -63,6 +63,7 @@ INSTALLED_APPS = [
     'reservations.apps.ReservationsConfig',
     'users.apps.UsersConfig',
     'django_extensions',
+    'django_filters',
     'rest_framework_swagger',
     'corsheaders',
 ]
