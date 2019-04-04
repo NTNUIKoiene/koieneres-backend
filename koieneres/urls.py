@@ -13,13 +13,15 @@ Including another URLconf
     1. Import the include() function: from django.conf.urls import url, include
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
-from django.conf.urls import url, include
+from django.conf.urls import include, url
 from django.contrib import admin
+from rest_framework import routers
+from rest_framework_jwt.views import (obtain_jwt_token, refresh_jwt_token,
+                                      verify_jwt_token)
+from rest_framework_swagger.views import get_swagger_view
+
 from reservations import views
 from users import views as userviews
-from rest_framework import routers
-from rest_framework_jwt.views import obtain_jwt_token, refresh_jwt_token, verify_jwt_token
-from rest_framework_swagger.views import get_swagger_view
 
 jwt_urlpatterns = [
     url(r'^token-auth/$', obtain_jwt_token, name='obtain_jwt_token'),

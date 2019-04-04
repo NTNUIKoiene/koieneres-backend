@@ -1,4 +1,5 @@
-from datetime import timedelta, date, datetime
+from datetime import date, datetime, timedelta
+
 from utils.dateutils import string_to_date
 
 

@@ -2,7 +2,8 @@
 from __future__ import unicode_literals
 
 from django.contrib import admin
-from .models import Reservation, ReservationMetaData, Cabin, ExtendedPeriod
+
+from .models import Cabin, ExtendedPeriod, Reservation, ReservationMetaData
 
 # Register your models here.
 

@@ -1,10 +1,11 @@
+import base64
+from io import BytesIO
+
+import barcode
+from barcode.writer import ImageWriter
 from django.http import HttpResponse
 from django.template.loader import render_to_string
-import barcode
-from io import BytesIO
 from weasyprint import HTML
-from barcode.writer import ImageWriter
-import base64
 
 
 def generate_pdf(response, reservation, reservation_items):
