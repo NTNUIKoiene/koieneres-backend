@@ -59,7 +59,7 @@ termcolor==1.1.0
 texttable==0.9.1
 tinycss2==0.6.1
 uritemplate==3.0.0
-urllib3==1.24.1
+urllib3==1.24.2
 wcwidth==0.1.7
 WeasyPrint==44
 webencodings==0.5.1
