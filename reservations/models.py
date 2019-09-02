@@ -13,6 +13,7 @@ class Cabin(models.Model):
     size = models.IntegerField()
     member_price = models.FloatField(default=40)
     non_member_price = models.FloatField(default=80)
+    in_use = models.BooleanField(default=True)
 
     def __str__(self):
         return self.name + f" ({self.id})"
@@ -25,9 +26,10 @@ class CabinClosing(models.Model):
     comment = models.TextField(default="")
     created_by = models.ForeignKey(
         settings.AUTH_USER_MODEL,
-        related_name='closings',
+        related_name="closings",
         on_delete=models.SET_NULL,
-        null=True)
+        null=True,
+    )
 
 
 class ReservationMetaData(models.Model):
@@ -43,12 +45,13 @@ class ReservationMetaData(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     created_by = models.ForeignKey(
         settings.AUTH_USER_MODEL,
-        related_name='reservations',
+        related_name="reservations",
         on_delete=models.SET_NULL,
-        null=True)
+        null=True,
+    )
 
     class Meta:
-        ordering = ('-created_at', )
+        ordering = ("-created_at",)
 
     def __str__(self):
         return str(self.created_at) + " - " + self.email + f" (#{self.id})"
@@ -56,18 +59,17 @@ class ReservationMetaData(models.Model):
 
 class Reservation(models.Model):
     cabin = models.ForeignKey(
-        Cabin,
-        on_delete=models.CASCADE,
-        related_name='reservation_items',
-        db_index=True)
+        Cabin, on_delete=models.CASCADE, related_name="reservation_items", db_index=True
+    )
     date = models.DateField(db_index=True)
     members = models.IntegerField()
     non_members = models.IntegerField()
     meta_data = models.ForeignKey(
         ReservationMetaData,
         on_delete=models.CASCADE,
-        related_name='reservation_items',
-        db_index=True)
+        related_name="reservation_items",
+        db_index=True,
+    )
 
 
 class ExtendedPeriod(models.Model):
@@ -78,7 +80,7 @@ class ExtendedPeriod(models.Model):
     description = models.TextField()
 
     def __str__(self):
-        return f'{self.description}, {self.reservation_date} -> {self.end_date}'
+        return f"{self.description}, {self.reservation_date} -> {self.end_date}"
 
 
 @receiver(post_save, sender=ReservationMetaData)
