@@ -13,7 +13,7 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 
 from utils.dateutils import compute_reservation_period, string_to_date
-from utils.pdf import generate_pdf
+# from utils.pdf import generate_pdf
 
 from .models import (Cabin, CabinClosing, ExtendedPeriod, Reservation,
                      ReservationMetaData)
@@ -53,7 +53,7 @@ class ReservationDataViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin,
         response = HttpResponse(content_type='application/pdf')
         response[
             'Content-Disposition'] = f"inline; filename=kvittering_{reservation_metadata.id}.pdf"
-        generate_pdf(response, reservation_metadata, reservation_items)
+        # generate_pdf(response, reservation_metadata, reservation_items)
         return response
 
 
