@@ -14,7 +14,6 @@ from rest_framework.response import Response
 
 from utils.dateutils import compute_reservation_period, string_to_date
 
-# from utils.pdf import generate_pdf
 
 from .models import (
     Cabin,
@@ -28,7 +27,6 @@ from .serializers import (
     CabinClosingSerializer,
     CabinSerializer,
     ExtendedPeriodSerializer,
-    PublicReservationMetaDataSerializer,
     ReservationMetaDataSerializer,
     StatusSerializer,
 )
@@ -50,6 +48,18 @@ class ReservationDataViewSet(
     mixins.UpdateModelMixin,
     viewsets.GenericViewSet,
 ):
+    """
+    list:
+    List all cabin reservations
+
+    retrieve:
+    Get cabin reservation by id
+
+    partial_update:
+    Change an existing reservation
+
+    """
+
     serializer_class = ReservationMetaDataSerializer
     permission_classes = (permissions.IsAuthenticated,)
     filterset_class = ReservationDataFilter
@@ -60,35 +70,15 @@ class ReservationDataViewSet(
 
     @action(detail=True, methods=["GET"])
     def receipt(self, request, pk=None):
+        """
+        Get receipt data of reservation
+        """
         try:
             reservation_metadata = ReservationMetaData.objects.get(id=pk)
         except ObjectDoesNotExist:
             raise Http404
         reservation_items = Reservation.objects.filter(meta_data=reservation_metadata)
         # generate_pdf(response, reservation_metadata, reservation_items)
-        return Response(
-            {
-                "metadata": ReservationMetaDataSerializer(reservation_metadata).data,
-                "ean": "5901234123457",
-            }
-        )
-
-
-class PublicReservationDataViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = ReservationMetaData.objects.filter(
-        reservation_items__date__gte=datetime.date.today()
-    )
-    serializer_class = PublicReservationMetaDataSerializer
-    permission_classes = (permissions.AllowAny,)
-
-    # TODO: Change which fields are shown on public receipt
-    @action(detail=True, methods=["GET"])
-    def receipt(self, request, pk=None):
-        try:
-            reservation_metadata = ReservationMetaData.objects.get(id=pk)
-        except ObjectDoesNotExist:
-            raise Http404
-        reservation_items = Reservation.objects.filter(meta_data=reservation_metadata)
         return Response(
             {
                 "metadata": ReservationMetaDataSerializer(reservation_metadata).data,
@@ -133,6 +123,11 @@ class StatusViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 class CreateReservationViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
+    """
+    create:
+    Create a new reservation
+    """
+
     serializer_class = ReservationMetaDataSerializer
     permission_classes = (permissions.IsAuthenticated,)
 
@@ -170,6 +165,7 @@ class CabinClosingViewSet(viewsets.ModelViewSet):
     delete:
     Delete a cabin closing
     """
+
     http_method_names = ["get", "post", "head", "delete"]
 
     def get_queryset(self):
@@ -182,11 +178,30 @@ class CabinClosingViewSet(viewsets.ModelViewSet):
 
 
 class CabinViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
+    """
+    list:
+    Get list of all cabins
+    """
+
     serializer_class = CabinSerializer
     queryset = Cabin.objects.all()
 
 
 class ExtendedPeriodViewSet(viewsets.ModelViewSet):
+    """
+    list:
+    Get all extended reservation periods
+
+    retrieve:
+    Get extended reservation period by id
+
+    create:
+    Create a new reservation period exension
+
+    delete:
+    Delete a reservation period extension
+    """
+
     http_method_names = ["get", "post", "head", "delete"]
     queryset = ExtendedPeriod.objects.all()
     serializer_class = ExtendedPeriodSerializer

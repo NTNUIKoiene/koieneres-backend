@@ -8,7 +8,12 @@ from users.serializers import UserSerializer
 
 
 class CurrentUserViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
-    permission_classes = (permissions.AllowAny, )
+    """
+    list:
+    Get the current logged in user
+    """
+
+    permission_classes = (permissions.AllowAny,)
 
     def list(self, request, format=None):
         serializer = UserSerializer(request.user)

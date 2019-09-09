@@ -16,55 +16,53 @@ Including another URLconf
 from django.conf.urls import include, url
 from django.contrib import admin
 from rest_framework import routers
-from rest_framework_jwt.views import (obtain_jwt_token, refresh_jwt_token,
-                                      verify_jwt_token)
+from rest_framework_jwt.views import (
+    obtain_jwt_token,
+    refresh_jwt_token,
+    verify_jwt_token,
+)
 from rest_framework_swagger.views import get_swagger_view
 
 from reservations import views
 from users import views as userviews
 
 jwt_urlpatterns = [
-    url(r'^token-auth/$', obtain_jwt_token, name='obtain_jwt_token'),
-    url(r'^token-auth/refresh/$', refresh_jwt_token, name='refresh_jwt_token'),
-    url(r'^token-auth/verify/$', verify_jwt_token, name='verify_jwt_token'),
+    url(r"^token-auth/$", obtain_jwt_token, name="obtain_jwt_token"),
+    url(r"^token-auth/refresh/$", refresh_jwt_token, name="refresh_jwt_token"),
+    url(r"^token-auth/verify/$", verify_jwt_token, name="verify_jwt_token"),
 ]
 
 authorization_urlpatterns = [
-    url(r'', include((jwt_urlpatterns, 'jwt'), namespace='jwt')),
+    url(r"", include((jwt_urlpatterns, "jwt"), namespace="jwt"))
 ]
 
 router = routers.DefaultRouter()
 router.register(
-    r'create-reservation',
+    r"create-reservation",
     views.CreateReservationViewSet,
-    base_name='create-reservation')
+    base_name="create-reservation",
+)
+
+router.register(r"reservationdata", views.ReservationDataViewSet, base_name="resdata")
+router.register(r"status", views.StatusViewSet, base_name="status")
 router.register(
-    r'publicreservationdata',
-    views.PublicReservationDataViewSet,
-    base_name='publicresdata')
-router.register(
-    r'reservationdata', views.ReservationDataViewSet, base_name='resdata')
-router.register(r'status', views.StatusViewSet, base_name='status')
-router.register(
-    r'reservation-period',
-    views.ReservationPeriodViewSet,
-    base_name='res-period')
-router.register(
-    r'current-user', userviews.CurrentUserViewSet, base_name='current-user')
+    r"reservation-period", views.ReservationPeriodViewSet, base_name="res-period"
+)
+router.register(r"current-user", userviews.CurrentUserViewSet, base_name="current-user")
 
 router.register(
-    r'cabin-closings', views.CabinClosingViewSet, base_name='cabin-closings')
+    r"cabin-closings", views.CabinClosingViewSet, base_name="cabin-closings"
+)
 
-router.register(r'cabin', views.CabinViewSet, base_name='cabin')
+router.register(r"cabin", views.CabinViewSet, base_name="cabin")
 
 router.register(
-    r'extended-periods',
-    views.ExtendedPeriodViewSet,
-    base_name='extended-periods')
+    r"extended-periods", views.ExtendedPeriodViewSet, base_name="extended-periods"
+)
 
 urlpatterns = [
-    url('^api/', include(router.urls)),
-    url(r'^admin/', admin.site.urls),
-    url(r'^authorization/', include(authorization_urlpatterns)),
-    url(r'^swagger/', get_swagger_view(title='Koieneres API')),
+    url("^api/", include(router.urls)),
+    url(r"^admin/", admin.site.urls),
+    url(r"^authorization/", include(authorization_urlpatterns)),
+    url(r"^swagger/", get_swagger_view(title="Koieneres API")),
 ]
