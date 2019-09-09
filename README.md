@@ -1,3 +1,6 @@
+# Backend for Koieneres
+
+[![CircleCI](https://circleci.com/gh/NTNUIKoiene/koieneres-backend/tree/master.svg?style=svg)](https://circleci.com/gh/NTNUIKoiene/koieneres-backend/tree/master)
 # Setup
 
 ### Create virtualenv and use it
