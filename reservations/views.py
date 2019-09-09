@@ -157,6 +157,19 @@ class ReservationPeriodViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 class CabinClosingViewSet(viewsets.ModelViewSet):
+    """
+    list:
+    Get information about cabin all closings
+
+    create:
+    Close a cabin for a period of time
+
+    retrieve:
+    Get a single cabin closing
+
+    delete:
+    Delete a cabin closing
+    """
     http_method_names = ["get", "post", "head", "delete"]
 
     def get_queryset(self):
