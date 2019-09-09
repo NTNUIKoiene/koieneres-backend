@@ -68,7 +68,7 @@ class ReservationDataViewSet(
     def get_queryset(self):
         return ReservationMetaData.objects.all()
 
-    @action(detail=True, methods=["GET"])
+    @action(detail=True, methods=["GET"], permission_classes=[permissions.AllowAny])
     def receipt(self, request, pk=None):
         """
         Get receipt data of reservation
