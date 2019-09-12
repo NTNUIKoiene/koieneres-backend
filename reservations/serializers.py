@@ -5,7 +5,7 @@ from django.db.models.functions import Coalesce
 from rest_framework import serializers
 
 from utils.dateutils import daterange, string_to_date
-from utils.validators import validate_selected_dates
+from utils.validators import validate_selected_dates, validate_number_of_beds
 
 from .models import (
     Cabin,
@@ -129,6 +129,7 @@ class ReservationMetaDataSerializer(serializers.ModelSerializer):
                 assert validate_selected_dates(
                     selected_dates, user.is_cabin_board
                 ), "Selected dates are invalid"
+                assert validate_number_of_beds(selected_dates), "Invalid number of beds"
                 # TODO: Validate reservation period
                 # TODO: Validate is closed
                 # Create reservations

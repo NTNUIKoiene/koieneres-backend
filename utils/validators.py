@@ -27,3 +27,12 @@ def validate_selected_dates(selected_dates, is_cabin_board):
             return False
 
     return True
+
+
+def validate_number_of_beds(selected_dates):
+    for sd in selected_dates:
+        if sd['members'] < 0 or sd['non_members'] < 0:
+            return False
+        if sd['members'] == 0 and sd['non_members'] == 0:
+            return False
+    return True
