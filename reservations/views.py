@@ -108,7 +108,7 @@ class StatusViewSet(viewsets.ReadOnlyModelViewSet):
 
     def get_serializer_context(self):
         from_date = self.request.GET.get("from", str(datetime.date.today()))
-        to_date = self.request.GET.get("to", str(compute_reservation_period()["to"]))
+        to_date = self.request.GET.get("to", str(compute_reservation_period(ExtendedPeriod.objects.all())["to"]))
         return {"from": string_to_date(from_date), "to": string_to_date(to_date)}
 
     def paginate_queryset(self, queryset, view=None):
