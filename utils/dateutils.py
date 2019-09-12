@@ -6,9 +6,15 @@ def daterange(start_date, end_date):
         yield start_date + timedelta(n)
 
 
-def compute_reservation_period(day=None):
+def compute_reservation_period(extensions, day=None):
     if day is None:
         day = date.today()
+    current_extension = extensions.filter(reservation_date__lte=day, end_date__gte=day).order_by('-end_date').first()
+    if current_extension is not None:
+        return {
+            "from": current_extension.reservation_date,
+            "to": current_extension.end_date
+        }
     offset = (day.weekday() - 2) % 7
     last_wednesday = day - timedelta(days=offset)
     period_duration = 15

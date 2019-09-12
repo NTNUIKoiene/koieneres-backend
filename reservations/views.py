@@ -4,22 +4,17 @@ from __future__ import unicode_literals
 import datetime
 
 from django.core.exceptions import ObjectDoesNotExist
-from django.core.files.storage import FileSystemStorage
-from django.http import FileResponse, Http404, HttpResponse
-from django.shortcuts import render
+from django.http import Http404
 from django_filters import rest_framework as filters
 from rest_framework import mixins, permissions, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
 from utils.dateutils import compute_reservation_period, string_to_date
-
-
 from .models import (
     Cabin,
     CabinClosing,
     ExtendedPeriod,
-    Reservation,
     ReservationMetaData,
 )
 from .serializers import (
@@ -77,8 +72,6 @@ class ReservationDataViewSet(
             reservation_metadata = ReservationMetaData.objects.get(id=pk)
         except ObjectDoesNotExist:
             raise Http404
-        reservation_items = Reservation.objects.filter(meta_data=reservation_metadata)
-        # generate_pdf(response, reservation_metadata, reservation_items)
         return Response(
             {
                 "metadata": ReservationMetaDataSerializer(reservation_metadata).data,
@@ -145,10 +138,10 @@ class ReservationPeriodViewSet(viewsets.ReadOnlyModelViewSet):
     permission_classes = (permissions.AllowAny,)
 
     def list(self, request, format=None):
-        return Response(compute_reservation_period())
+        return Response(compute_reservation_period(ExtendedPeriod.objects.all()))
 
     def retrieve(self, request, pk=None):
-        return Response(compute_reservation_period(string_to_date(pk)))
+        return Response(compute_reservation_period(string_to_date(ExtendedPeriod.objects.all(), pk)))
 
 
 class CabinClosingViewSet(viewsets.ModelViewSet):
