@@ -141,7 +141,7 @@ class ReservationPeriodViewSet(viewsets.ReadOnlyModelViewSet):
         return Response(compute_reservation_period(ExtendedPeriod.objects.all()))
 
     def retrieve(self, request, pk=None):
-        return Response(compute_reservation_period(string_to_date(ExtendedPeriod.objects.all(), pk)))
+        return Response(compute_reservation_period(ExtendedPeriod.objects.all(), string_to_date(pk)))
 
 
 class CabinClosingViewSet(viewsets.ModelViewSet):
