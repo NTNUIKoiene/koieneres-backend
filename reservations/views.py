@@ -11,12 +11,7 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 
 from utils.dateutils import compute_reservation_period, string_to_date
-from .models import (
-    Cabin,
-    CabinClosing,
-    ExtendedPeriod,
-    ReservationMetaData,
-)
+from .models import Cabin, CabinClosing, ExtendedPeriod, ReservationMetaData
 from .serializers import (
     CabinClosingListSerializer,
     CabinClosingSerializer,
@@ -108,7 +103,9 @@ class StatusViewSet(viewsets.ReadOnlyModelViewSet):
 
     def get_serializer_context(self):
         from_date = self.request.GET.get("from", str(datetime.date.today()))
-        to_date = self.request.GET.get("to", str(compute_reservation_period(ExtendedPeriod.objects.all())["to"]))
+        to_date = self.request.GET.get(
+            "to", str(compute_reservation_period(ExtendedPeriod.objects.all())["to"])
+        )
         return {"from": string_to_date(from_date), "to": string_to_date(to_date)}
 
     def paginate_queryset(self, queryset, view=None):
@@ -141,7 +138,9 @@ class ReservationPeriodViewSet(viewsets.ReadOnlyModelViewSet):
         return Response(compute_reservation_period(ExtendedPeriod.objects.all()))
 
     def retrieve(self, request, pk=None):
-        return Response(compute_reservation_period(ExtendedPeriod.objects.all(), string_to_date(pk)))
+        return Response(
+            compute_reservation_period(ExtendedPeriod.objects.all(), string_to_date(pk))
+        )
 
 
 class CabinClosingViewSet(viewsets.ModelViewSet):
