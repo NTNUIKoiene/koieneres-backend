@@ -2,7 +2,7 @@ from django.core.management.base import BaseCommand, CommandError
 from urllib import request
 import json
 from utils.dateutils import compute_reservation_period, string_to_date
-from reservations.models import ExtendedPeriod, Cabin, CabinClosing
+from reservations.models import ExtendedPeriod, Cabin, CabinClosing, Reservation
 
 
 class Command(BaseCommand):
@@ -41,6 +41,7 @@ class Command(BaseCommand):
 
         kamtjonn = Cabin.objects.get(name="Kamtjønnkoia")
         # Close cabin on dates
+        # TODO: Check for existing closing before actually closing
         for date, level in data:
             self.stdout.write(f"Closing on {str(date)}. Warning level {level}")
             closing = CabinClosing(
@@ -49,7 +50,27 @@ class Command(BaseCommand):
                 to_date=date,
                 comment=f"Avalanche Warning",
             )
+            # TODO: Toggle
             closing.save()
+
+        # Check if there are existing reservations on affected dates
+        to_notify = []
+        for date, _ in data:
+            reservations = Reservation.objects.filter(cabin=kamtjonn, date=date)
+            for reservation in reservations:
+                self.stdout.write(
+                    self.style.WARNING(
+                        f"Found reservation in closed period. Date: {str(date)}, ID: {reservation.meta_data.id}"
+                    )
+                )
+                to_notify.append(
+                    {
+                        "id": reservation.meta_data.id,
+                        "date": date,
+                        "email": reservation.meta_data.email,
+                        "phone": reservation.meta_data.phone,
+                    }
+                )
 
         self.stdout.write(self.style.SUCCESS("Successfully checked avalanche warnings"))
 
