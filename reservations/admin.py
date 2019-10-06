@@ -3,7 +3,13 @@ from __future__ import unicode_literals
 
 from django.contrib import admin
 
-from .models import Cabin, ExtendedPeriod, Reservation, ReservationMetaData
+from .models import (
+    Cabin,
+    ExtendedPeriod,
+    Reservation,
+    ReservationMetaData,
+    CabinClosing,
+)
 
 # Register your models here.
 
@@ -11,3 +17,4 @@ admin.site.register(Reservation)
 admin.site.register(ReservationMetaData)
 admin.site.register(Cabin)
 admin.site.register(ExtendedPeriod)
+admin.site.register(CabinClosing)
