@@ -17,7 +17,7 @@ class Command(BaseCommand):
         mock_url = "http://www.mocky.io/v2/5d99f690310000820097da21"
 
         # Load and process avalanche data
-        data = request.urlopen(mock_url)
+        data = request.urlopen(nve_url)
         data = json.load(data)
         data = list(
             filter(
