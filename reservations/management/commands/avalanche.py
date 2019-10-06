@@ -14,7 +14,7 @@ class Command(BaseCommand):
         to_date = str(reservation_period["to"])
 
         nve_url = f"https://api01.nve.no/hydrology/forecast/avalanche/v4.0.2/api/AvalancheWarningByRegion/Simple/3022/2/{from_date}/{to_date}"
-        mock_url = "http://www.mocky.io/v2/5d94f6972f00006d008ffa62"
+        mock_url = "http://www.mocky.io/v2/5d99f690310000820097da21"
 
         # Load and process avalanche data
         data = request.urlopen(mock_url)
@@ -48,6 +48,7 @@ class Command(BaseCommand):
                 cabin=kamtjonn,
                 from_date=date,
                 to_date=date,
+                avalanche_warning=True,
                 comment=f"Avalanche Warning",
             )
             # TODO: Toggle

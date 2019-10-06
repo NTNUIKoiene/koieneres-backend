@@ -24,6 +24,7 @@ class CabinClosing(models.Model):
     from_date = models.DateField()
     to_date = models.DateField()
     comment = models.TextField(default="")
+    avalanche_warning = models.BooleanField(default=False)
     created_by = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         related_name="closings",
