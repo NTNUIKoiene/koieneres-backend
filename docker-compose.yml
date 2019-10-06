@@ -38,9 +38,11 @@ services:
     command: certonly --webroot --webroot-path=/var/www/html --email espen.meidell@gmail.com --agree-tos --no-eff-email --force-renewal -d api.koiene.no  -d www.api.koiene.no
   ophelia:
     image: "mcuadros/ofelia:latest"
+    restart: unless-stopped
     container_name: ophelia
     volumes:
       - ./ophelia/config.ini:/etc/ofelia/config.ini
+      - /var/run/docker.sock:/var/run/docker.sock
     networks:
       - app-network
     depends_on:
