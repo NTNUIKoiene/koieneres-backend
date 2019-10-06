@@ -41,18 +41,25 @@ class Command(BaseCommand):
 
         kamtjonn = Cabin.objects.get(name="Kamtjønnkoia")
         # Close cabin on dates
-        # TODO: Check for existing closing before actually closing
         for date, level in data:
-            self.stdout.write(f"Closing on {str(date)}. Warning level {level}")
-            closing = CabinClosing(
-                cabin=kamtjonn,
-                from_date=date,
-                to_date=date,
-                avalanche_warning=True,
-                comment=f"Avalanche Warning",
+            already_closed = (
+                CabinClosing.objects.filter(
+                    cabin=kamtjonn, from_date=date, to_date=date, avalanche_warning=True
+                ).count()
+                > 0
             )
-            # TODO: Toggle
-            closing.save()
+            if already_closed:
+                self.stdout.write(f"Already closed on on {str(date)}.")
+            else:
+                self.stdout.write(f"Closing on {str(date)}. Warning level {level}")
+                closing = CabinClosing(
+                    cabin=kamtjonn,
+                    from_date=date,
+                    to_date=date,
+                    avalanche_warning=True,
+                    comment=f"Avalanche Warning",
+                )
+                closing.save()
 
         # Check if there are existing reservations on affected dates
         to_notify = []
