@@ -10,10 +10,6 @@ services:
     restart: unless-stopped
     networks:
       - app-network
-    logging:
-      driver: gcplogs
-      options:
-        gcp-project: koieneres-dev
   webserver:
     image: nginx:mainline-alpine
     container_name: webserver
@@ -30,10 +26,6 @@ services:
       - api
     networks:
       - app-network
-    logging:
-      driver: gcplogs
-      options:
-        gcp-project: koieneres-dev
   certbot:
     image: certbot/certbot
     container_name: certbot
@@ -55,10 +47,6 @@ services:
       - app-network
     depends_on:
       - api
-    logging:
-      driver: gcplogs
-      options:
-        gcp-project: koieneres-dev
 volumes:
   certbot-etc:
   certbot-var:
