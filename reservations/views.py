@@ -93,7 +93,7 @@ class StatusViewSet(viewsets.ReadOnlyModelViewSet):
         to: date (default end of current reservation period)
     """
 
-    queryset = Cabin.objects.all()
+    queryset = Cabin.objects.filter(in_use=True)
     permission_classes = (permissions.AllowAny,)
     serializer_class = StatusSerializer
 
