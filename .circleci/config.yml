@@ -3,6 +3,8 @@ jobs:
   deploy:
     machine:
       enabled: true
+      environment:
+        - GOOGLE_APPLICATION_CREDENTIALS: "/etc/google/auth/application_default_credentials.json"
     steps:
       - add_ssh_keys:
           fingerprints:
@@ -10,7 +12,7 @@ jobs:
       - run:
           name: Deploy Over SSH
           command: |
-            ssh $SSH_USER@$SSH_HOST "cd koieneres-backend && git reset --hard HEAD && git pull && GOOGLE_APPLICATION_CREDENTIALS="/etc/google/auth/application_default_credentials.json" && /snap/bin/docker-compose up -d --no-deps --build api"
+            ssh $SSH_USER@$SSH_HOST "cd koieneres-backend && git reset --hard HEAD && git pull && /snap/bin/docker-compose up -d --no-deps --build api"
 
 workflows:
   version: 2
