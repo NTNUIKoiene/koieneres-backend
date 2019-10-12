@@ -3,8 +3,6 @@ jobs:
   deploy:
     machine:
       enabled: true
-      environment:
-        - GOOGLE_APPLICATION_CREDENTIALS: "/etc/google/auth/application_default_credentials.json"
     steps:
       - add_ssh_keys:
           fingerprints:
